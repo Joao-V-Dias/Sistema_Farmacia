@@ -12,8 +12,8 @@ public class ItensReceitaService {
         this.itensReceitaDAO = new ItensReceitaDAO();
     }
 
-    public ItensReceita salvar(ItensReceita item, Long receitaId) {
-        return itensReceitaDAO.salvar(item, receitaId);
+    public ItensReceita salvar(ItensReceita item) {
+        return itensReceitaDAO.salvar(item);
     }
 
     public void deletarPorReceita(Long receitaId) {

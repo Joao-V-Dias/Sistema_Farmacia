@@ -27,7 +27,7 @@ public class FinanceiroDAO {
             stmt.close();
             return valorTotal;
         } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar o valor do estoque", e);
+            throw new RuntimeException("NAO FOI POSSIVEL BUSCAR O VALOR DO ESTOQUE", e);
         }
     }
 }

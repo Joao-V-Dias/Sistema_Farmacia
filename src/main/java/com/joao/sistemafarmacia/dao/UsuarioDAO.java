@@ -1,123 +1,37 @@
 package com.joao.sistemafarmacia.dao;
 
 import com.joao.sistemafarmacia.model.Usuario;
-import com.joao.sistemafarmacia.util.Conexao;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import javax.mail.internet.AddressException;
 
-public class UsuarioDAO {
+public class UsuarioDAO extends DAO<Usuario> {
 
-    private final Connection conn;
+    private static final String CREATE = "INSERT INTO usuario (email, nome, senha, telefone, cpf, data_nascimento, cargo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String READ = "SELECT usuario_id, nome, email, senha, cpf, telefone, data_nascimento, cargo FROM usuario";
+    private static final String UPDATE = "UPDATE usuario SET email=?, nome=?, senha=?, telefone=?, cpf=?, data_nascimento=?, cargo=? WHERE usuario_id=?";
+    private static final String DELETE = "DELETE FROM usuario WHERE usuario_id=?";
 
     public UsuarioDAO() {
-        this.conn = Conexao.getInstance();
+        super(CREATE, READ, UPDATE, DELETE);
     }
 
-    public Usuario salvar(Usuario usuario) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO usuario (email, nome, senha, telefone, cpf, data_nascimento, cargo) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, usuario.getEmail());
-            stmt.setString(2, usuario.getNome());
-            stmt.setString(3, usuario.getSenha());
-            stmt.setString(4, usuario.getTelefone());
-            stmt.setString(5, usuario.getCpf());
-            stmt.setDate(6, usuario.getDataNascimento() != null ? Date.valueOf(usuario.getDataNascimento()) : null);
-            stmt.setString(7, usuario.getCargo());
-            stmt.executeUpdate();
-
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                usuario.setId(rs.getLong(1));
-            }
-            rs.close();
-            stmt.close();
-            return usuario;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível salvar o usuário", e);
-        }
+    @Override
+    protected void preencherPrepareStatement(PreparedStatement stmt, Usuario entidade) throws SQLException {
+        stmt.setString(1, entidade.getEmail());
+        stmt.setString(2, entidade.getNome());
+        stmt.setString(3, entidade.getSenha());
+        stmt.setString(4, entidade.getTelefone());
+        stmt.setString(5, entidade.getCpf());
+        stmt.setDate(6, entidade.getDataNascimento() != null ? Date.valueOf(entidade.getDataNascimento()) : null);
+        stmt.setString(7, entidade.getCargo());
     }
 
-    public Usuario editar(Usuario usuario) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE usuario SET nome=?, senha=?, cpf=?, telefone=?, data_nascimento=?, cargo=? WHERE usuario_id=?");
-            stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getSenha());
-            stmt.setString(3, usuario.getCpf());
-            stmt.setString(4, usuario.getTelefone());
-            stmt.setDate(5, usuario.getDataNascimento() != null ? Date.valueOf(usuario.getDataNascimento()) : null);
-            stmt.setString(6, usuario.getCargo());
-            stmt.setLong(7, usuario.getId());
-            stmt.executeUpdate();
-            stmt.close();
-            return usuario;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível editar o usuário", e);
-        }
-    }
-
-    public void deletar(Long id) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM usuario WHERE usuario_id=?");
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível deletar o usuário", e);
-        }
-    }
-
-    public List<Usuario> buscarTodos() {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT usuario_id, nome, email, senha, cpf, telefone, data_nascimento, cargo FROM usuario");
-            ResultSet rs = stmt.executeQuery();
-            return mapearLista(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar os usuários", e);
-        }
-    }
-
-    public List<Usuario> buscarPorNome(String nome) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM usuario WHERE nome ILIKE ?");
-            stmt.setString(1, "%" + nome + "%");
-            ResultSet rs = stmt.executeQuery();
-            return mapearLista(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar usuários pelo nome", e);
-        }
-    }
-
-    public Usuario buscarPorEmail(String email) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM usuario WHERE email=?");
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            return rs.next() ? mapear(rs) : null;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar o usuário pelo email", e);
-        }
-    }
-
-    private List<Usuario> mapearLista(ResultSet rs) throws SQLException {
-        List<Usuario> usuarios = new ArrayList<>();
-        while (rs.next()) {
-            usuarios.add(mapear(rs));
-        }
-        return usuarios;
-    }
-
-    private Usuario mapear(ResultSet rs) throws SQLException {
+    @Override
+    protected Usuario mapear(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
         usuario.setId(rs.getLong("usuario_id"));
         usuario.setNome(rs.getString("nome"));
@@ -132,8 +46,31 @@ public class UsuarioDAO {
         try {
             usuario.setEmail(rs.getString("email"));
         } catch (AddressException e) {
-            throw new RuntimeException("Usuário com email inválido no banco de dados", e);
+            throw new RuntimeException("USUARIO COM EMAIL INVALIDO NO BANCO DE DADOS", e);
         }
         return usuario;
     }
+
+    public Usuario buscarPorEmail(String email) {
+        try {
+            PreparedStatement stmt = CONN.prepareStatement("SELECT * FROM usuario WHERE email=?");
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() ? mapear(rs) : null;
+        } catch (SQLException e) {
+            throw new RuntimeException("NAO FOI POSSIVEL BUSCAR O USUARIO PELO EMAIL", e);
+        }
+    }
+
+    public List<Usuario> buscarPorNome(String nome) {
+        try {
+            PreparedStatement stmt = CONN.prepareStatement("SELECT * FROM usuario WHERE nome ILIKE ?");
+            stmt.setString(1, "%" + nome + "%");
+            ResultSet rs = stmt.executeQuery();
+            return mapearLista(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException("NAO FOI POSSIVEL BUSCAR USUARIOS PELO NOME", e);
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\dao\ClienteDAO.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\dao\CompraDAO.java
+C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\dao\DAO.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\dao\FinanceiroDAO.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\dao\InsumoDAO.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\dao\ItensReceitaDAO.java
@@ -9,6 +10,7 @@ C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\dao\UsuarioDAO.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\model\Cliente.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\model\Compra.java
+C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\model\Entidade.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\model\Insumo.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\model\ItensReceita.java
 C:\Users\Joao\Documents\NetBeansProjects\SistemaFarmacia\src\main\java\com\joao\sistemafarmacia\model\Pedido.java

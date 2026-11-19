@@ -8,9 +8,27 @@ package com.joao.sistemafarmacia.model;
  *
  * @author Joao
  */
-public class ItensReceita {
+public class ItensReceita implements Entidade {
+    private Long id;
+    private Receita receita;
     private Insumo insumo;
     private double quantidade;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Receita getReceita() {
+        return receita;
+    }
+
+    public void setReceita(Receita receita) {
+        this.receita = receita;
+    }
 
     public Insumo getInsumo() {
         return insumo;
@@ -27,6 +45,6 @@ public class ItensReceita {
     public void setQuantidade(double quantidade) {
         this.quantidade = quantidade;
     }
-    
-    
+
+
 }

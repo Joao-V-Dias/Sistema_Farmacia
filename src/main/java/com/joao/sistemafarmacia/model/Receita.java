@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Joao
  */
-public class Receita {
+public class Receita implements Entidade {
     private Long id;
     private String codigo;
     private String nomeMedico;

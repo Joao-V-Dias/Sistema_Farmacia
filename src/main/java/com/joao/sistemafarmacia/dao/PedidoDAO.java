@@ -2,122 +2,34 @@ package com.joao.sistemafarmacia.dao;
 
 import com.joao.sistemafarmacia.model.Cliente;
 import com.joao.sistemafarmacia.model.Pedido;
-import com.joao.sistemafarmacia.util.Conexao;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-public class PedidoDAO {
+public class PedidoDAO extends DAO<Pedido> {
 
-    private final Connection conn;
+    private static final String CREATE = "INSERT INTO pedido (data_pedido, cliente_id, valor, status) VALUES (?, ?, ?, ?)";
+    private static final String READ = "SELECT p.*, c.nome, c.cpf, c.telefone, c.rua, c.numero, c.data_nascimento FROM pedido p "
+            + "INNER JOIN cliente c ON c.cliente_id = p.cliente_id";
+    private static final String UPDATE = "UPDATE pedido SET data_pedido=?, cliente_id=?, valor=?, status=? WHERE pedido_id=?";
+    private static final String DELETE = "DELETE FROM pedido WHERE pedido_id=?";
 
     public PedidoDAO() {
-        this.conn = Conexao.getInstance();
+        super(CREATE, READ, UPDATE, DELETE);
     }
 
-    public Pedido salvar(Pedido pedido) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO pedido (data_pedido, cliente_id, valor, status) VALUES (?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            stmt.setDate(1, pedido.getDataPedido() != null ? Date.valueOf(pedido.getDataPedido()) : null);
-            stmt.setLong(2, pedido.getCliente().getId());
-            stmt.setDouble(3, pedido.getValor());
-            stmt.setString(4, pedido.getStatus());
-            stmt.executeUpdate();
-
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                pedido.setId(rs.getLong(1));
-            }
-            rs.close();
-            stmt.close();
-            return pedido;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível salvar o pedido", e);
-        }
+    @Override
+    protected void preencherPrepareStatement(PreparedStatement stmt, Pedido entidade) throws SQLException {
+        stmt.setDate(1, entidade.getDataPedido() != null ? Date.valueOf(entidade.getDataPedido()) : null);
+        stmt.setLong(2, entidade.getCliente().getId());
+        stmt.setDouble(3, entidade.getValor());
+        stmt.setString(4, entidade.getStatus());
     }
 
-    public Pedido editar(Pedido pedido) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE pedido SET data_pedido=?, cliente_id=?, valor=?, status=? WHERE pedido_id=?");
-            stmt.setDate(1, pedido.getDataPedido() != null ? Date.valueOf(pedido.getDataPedido()) : null);
-            stmt.setLong(2, pedido.getCliente().getId());
-            stmt.setDouble(3, pedido.getValor());
-            stmt.setString(4, pedido.getStatus());
-            stmt.setLong(5, pedido.getId());
-            stmt.executeUpdate();
-            stmt.close();
-            return pedido;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível editar o pedido", e);
-        }
-    }
-
-    public void deletar(Long id) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM pedido WHERE pedido_id=?");
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível deletar o pedido", e);
-        }
-    }
-
-    public List<Pedido> buscarTodos() {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT p.*, c.nome, c.cpf, c.telefone, c.rua, c.numero, c.data_nascimento FROM pedido p "
-                    + "INNER JOIN cliente c ON c.cliente_id = p.cliente_id");
-            ResultSet rs = stmt.executeQuery();
-            return mapearLista(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar os pedidos", e);
-        }
-    }
-
-    public List<Pedido> buscarPorStatus(String status) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT p.*, c.nome, c.cpf, c.telefone, c.rua, c.numero, c.data_nascimento FROM pedido p "
-                    + "INNER JOIN cliente c ON c.cliente_id = p.cliente_id WHERE p.status ILIKE ?");
-            stmt.setString(1, "%" + status + "%");
-            ResultSet rs = stmt.executeQuery();
-            return mapearLista(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar pedidos pelo status", e);
-        }
-    }
-
-    public List<Pedido> buscarPorCpf(String cpf) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT p.*, c.nome, c.cpf, c.telefone, c.rua, c.numero, c.data_nascimento FROM pedido p "
-                    + "INNER JOIN cliente c ON c.cliente_id = p.cliente_id WHERE c.cpf ILIKE ?");
-            stmt.setString(1, "%" + cpf + "%");
-            ResultSet rs = stmt.executeQuery();
-            return mapearLista(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar pedidos pelo cpf", e);
-        }
-    }
-
-    private List<Pedido> mapearLista(ResultSet rs) throws SQLException {
-        List<Pedido> pedidos = new ArrayList<>();
-        while (rs.next()) {
-            pedidos.add(mapear(rs));
-        }
-        return pedidos;
-    }
-
-    private Pedido mapear(ResultSet rs) throws SQLException {
+    @Override
+    protected Pedido mapear(ResultSet rs) throws SQLException {
         Cliente cliente = new Cliente();
         cliente.setId(rs.getLong("cliente_id"));
         cliente.setNome(rs.getString("nome"));
@@ -139,5 +51,31 @@ public class PedidoDAO {
         pedido.setDataPedido(dataPedido != null ? dataPedido.toLocalDate() : null);
 
         return pedido;
+    }
+
+    public List<Pedido> buscarPorStatus(String status) {
+        try {
+            PreparedStatement stmt = CONN.prepareStatement(
+                    "SELECT p.*, c.nome, c.cpf, c.telefone, c.rua, c.numero, c.data_nascimento FROM pedido p "
+                    + "INNER JOIN cliente c ON c.cliente_id = p.cliente_id WHERE p.status ILIKE ?");
+            stmt.setString(1, "%" + status + "%");
+            ResultSet rs = stmt.executeQuery();
+            return mapearLista(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException("NAO FOI POSSIVEL BUSCAR PEDIDOS PELO STATUS", e);
+        }
+    }
+
+    public List<Pedido> buscarPorCpf(String cpf) {
+        try {
+            PreparedStatement stmt = CONN.prepareStatement(
+                    "SELECT p.*, c.nome, c.cpf, c.telefone, c.rua, c.numero, c.data_nascimento FROM pedido p "
+                    + "INNER JOIN cliente c ON c.cliente_id = p.cliente_id WHERE c.cpf ILIKE ?");
+            stmt.setString(1, "%" + cpf + "%");
+            ResultSet rs = stmt.executeQuery();
+            return mapearLista(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException("NAO FOI POSSIVEL BUSCAR PEDIDOS PELO CPF", e);
+        }
     }
 }

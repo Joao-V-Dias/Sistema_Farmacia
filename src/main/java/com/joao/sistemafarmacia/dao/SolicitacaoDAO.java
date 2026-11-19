@@ -2,85 +2,34 @@ package com.joao.sistemafarmacia.dao;
 
 import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.model.Solicitacao;
-import com.joao.sistemafarmacia.util.Conexao;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-public class SolicitacaoDAO {
+public class SolicitacaoDAO extends DAO<Solicitacao> {
 
-    private final Connection conn;
+    private static final String CREATE = "INSERT INTO solicitacao (insumo_id, quantidade, valor, data_solicitacao, status) VALUES (?, ?, ?, ?, ?)";
+    private static final String READ = "SELECT s.*, i.nome, i.valor AS valor_insumo, i.quantidade AS quantidade_insumo, i.minimo FROM solicitacao s "
+            + "INNER JOIN insumo i ON i.insumo_id = s.insumo_id ORDER BY s.solicitacao_id DESC";
+    private static final String UPDATE = "UPDATE solicitacao SET insumo_id=?, quantidade=?, valor=?, data_solicitacao=?, status=? WHERE solicitacao_id=?";
+    private static final String DELETE = "DELETE FROM solicitacao WHERE solicitacao_id=?";
 
     public SolicitacaoDAO() {
-        this.conn = Conexao.getInstance();
+        super(CREATE, READ, UPDATE, DELETE);
     }
 
-    public Solicitacao salvar(Solicitacao solicitacao) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO solicitacao (insumo_id, quantidade, valor, data_solicitacao, status) VALUES (?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            stmt.setLong(1, solicitacao.getInsumo().getId());
-            stmt.setDouble(2, solicitacao.getQuantidade());
-            stmt.setDouble(3, solicitacao.getValor());
-            stmt.setDate(4, solicitacao.getDataSolicitacao() != null ? Date.valueOf(solicitacao.getDataSolicitacao()) : null);
-            stmt.setString(5, solicitacao.getStatus());
-            stmt.executeUpdate();
-
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                solicitacao.setId(rs.getLong(1));
-            }
-            rs.close();
-            stmt.close();
-            return solicitacao;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível salvar a solicitação", e);
-        }
+    @Override
+    protected void preencherPrepareStatement(PreparedStatement stmt, Solicitacao entidade) throws SQLException {
+        stmt.setLong(1, entidade.getInsumo().getId());
+        stmt.setDouble(2, entidade.getQuantidade());
+        stmt.setDouble(3, entidade.getValor());
+        stmt.setDate(4, entidade.getDataSolicitacao() != null ? Date.valueOf(entidade.getDataSolicitacao()) : null);
+        stmt.setString(5, entidade.getStatus());
     }
 
-    public Solicitacao editar(Solicitacao solicitacao) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE solicitacao SET quantidade=?, valor=?, status=? WHERE solicitacao_id=?");
-            stmt.setDouble(1, solicitacao.getQuantidade());
-            stmt.setDouble(2, solicitacao.getValor());
-            stmt.setString(3, solicitacao.getStatus());
-            stmt.setLong(4, solicitacao.getId());
-            stmt.executeUpdate();
-            stmt.close();
-            return solicitacao;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível editar a solicitação", e);
-        }
-    }
-
-    public List<Solicitacao> buscarTodos() {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT s.*, i.nome, i.valor AS valor_insumo, i.quantidade AS quantidade_insumo, i.minimo FROM solicitacao s "
-                    + "INNER JOIN insumo i ON i.insumo_id = s.insumo_id ORDER BY s.solicitacao_id DESC");
-            ResultSet rs = stmt.executeQuery();
-            return mapearLista(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar as solicitações", e);
-        }
-    }
-
-    private List<Solicitacao> mapearLista(ResultSet rs) throws SQLException {
-        List<Solicitacao> solicitacoes = new ArrayList<>();
-        while (rs.next()) {
-            solicitacoes.add(mapear(rs));
-        }
-        return solicitacoes;
-    }
-
-    private Solicitacao mapear(ResultSet rs) throws SQLException {
+    @Override
+    protected Solicitacao mapear(ResultSet rs) throws SQLException {
         Insumo insumo = new Insumo();
         insumo.setId(rs.getLong("insumo_id"));
         insumo.setNome(rs.getString("nome"));
