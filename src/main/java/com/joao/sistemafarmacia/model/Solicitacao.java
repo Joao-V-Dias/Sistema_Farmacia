@@ -2,7 +2,7 @@ package com.joao.sistemafarmacia.model;
 
 import java.time.LocalDate;
 
-public class Solicitacao {
+public class Solicitacao implements Entidade {
     private Long id;
     private Insumo insumo;
     private double quantidade;

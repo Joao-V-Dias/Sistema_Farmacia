@@ -1,0 +1,3 @@
+ALTER TABLE itens_receita DROP CONSTRAINT itens_receita_pkey;
+ALTER TABLE itens_receita ADD COLUMN itens_receita_id BIGSERIAL PRIMARY KEY;
+ALTER TABLE itens_receita ADD CONSTRAINT itens_receita_receita_id_insumo_id_key UNIQUE (receita_id, insumo_id);

@@ -1,6 +1,6 @@
 package com.joao.sistemafarmacia.model;
 
-public class Compra {
+public class Compra implements Entidade {
     private Long id;
     private Solicitacao solicitacao;
     private Insumo insumo;

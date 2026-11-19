@@ -49,10 +49,11 @@ CREATE TABLE receita (
 );
 
 CREATE TABLE itens_receita (
-    receita_id BIGINT NOT NULL REFERENCES receita (receita_id) ON DELETE CASCADE,
-    insumo_id  BIGINT NOT NULL REFERENCES insumo (insumo_id),
-    quantidade NUMERIC(10, 3) NOT NULL CHECK (quantidade > 0),
-    PRIMARY KEY (receita_id, insumo_id)
+    itens_receita_id BIGSERIAL PRIMARY KEY,
+    receita_id       BIGINT NOT NULL REFERENCES receita (receita_id) ON DELETE CASCADE,
+    insumo_id        BIGINT NOT NULL REFERENCES insumo (insumo_id),
+    quantidade       NUMERIC(10, 3) NOT NULL CHECK (quantidade > 0),
+    UNIQUE (receita_id, insumo_id)
 );
 
 CREATE TABLE valor_estoque (

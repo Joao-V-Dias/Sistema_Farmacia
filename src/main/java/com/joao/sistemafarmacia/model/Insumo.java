@@ -8,7 +8,7 @@ package com.joao.sistemafarmacia.model;
  *
  * @author Joao
  */
-public class Insumo {
+public class Insumo implements Entidade {
     private Long id;
     private String nome;
     private double valor;

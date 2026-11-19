@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Joao
  */
-public class Pedido {
+public class Pedido implements Entidade {
     private Long id;
     private LocalDate dataPedido;
     private Cliente cliente;

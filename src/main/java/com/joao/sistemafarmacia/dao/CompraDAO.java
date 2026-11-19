@@ -3,88 +3,35 @@ package com.joao.sistemafarmacia.dao;
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.model.Solicitacao;
-import com.joao.sistemafarmacia.util.Conexao;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-public class CompraDAO {
+public class CompraDAO extends DAO<Compra> {
 
-    private final Connection conn;
+    private static final String CREATE = "INSERT INTO compra (solicitacao_id, insumo_id, cnpj_fornecedor, numero_nota_fiscal, quantidade, valor, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String READ = "SELECT c.*, i.nome, i.valor AS valor_insumo, i.quantidade AS quantidade_insumo, i.minimo FROM compra c "
+            + "INNER JOIN insumo i ON i.insumo_id = c.insumo_id ORDER BY c.compra_id DESC";
+    private static final String UPDATE = "UPDATE compra SET solicitacao_id=?, insumo_id=?, cnpj_fornecedor=?, numero_nota_fiscal=?, quantidade=?, valor=?, status=? WHERE compra_id=?";
+    private static final String DELETE = "DELETE FROM compra WHERE compra_id=?";
 
     public CompraDAO() {
-        this.conn = Conexao.getInstance();
+        super(CREATE, READ, UPDATE, DELETE);
     }
 
-    public Compra salvar(Compra compra) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO compra (solicitacao_id, insumo_id, cnpj_fornecedor, numero_nota_fiscal, quantidade, valor, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            stmt.setLong(1, compra.getSolicitacao().getId());
-            stmt.setLong(2, compra.getInsumo().getId());
-            stmt.setString(3, compra.getCnpjFornecedor());
-            stmt.setString(4, compra.getNumeroNotaFiscal());
-            stmt.setDouble(5, compra.getQuantidade());
-            stmt.setDouble(6, compra.getValor());
-            stmt.setString(7, compra.getStatus());
-            stmt.executeUpdate();
-
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                compra.setId(rs.getLong(1));
-            }
-            rs.close();
-            stmt.close();
-            return compra;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível salvar a compra", e);
-        }
+    @Override
+    protected void preencherPrepareStatement(PreparedStatement stmt, Compra entidade) throws SQLException {
+        stmt.setLong(1, entidade.getSolicitacao().getId());
+        stmt.setLong(2, entidade.getInsumo().getId());
+        stmt.setString(3, entidade.getCnpjFornecedor());
+        stmt.setString(4, entidade.getNumeroNotaFiscal());
+        stmt.setDouble(5, entidade.getQuantidade());
+        stmt.setDouble(6, entidade.getValor());
+        stmt.setString(7, entidade.getStatus());
     }
 
-    public Compra editar(Compra compra) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE compra SET cnpj_fornecedor=?, numero_nota_fiscal=?, quantidade=?, valor=?, status=? WHERE compra_id=?");
-            stmt.setString(1, compra.getCnpjFornecedor());
-            stmt.setString(2, compra.getNumeroNotaFiscal());
-            stmt.setDouble(3, compra.getQuantidade());
-            stmt.setDouble(4, compra.getValor());
-            stmt.setString(5, compra.getStatus());
-            stmt.setLong(6, compra.getId());
-            stmt.executeUpdate();
-            stmt.close();
-            return compra;
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível editar a compra", e);
-        }
-    }
-
-    public List<Compra> buscarTodos() {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT c.*, i.nome, i.valor AS valor_insumo, i.quantidade AS quantidade_insumo, i.minimo FROM compra c "
-                    + "INNER JOIN insumo i ON i.insumo_id = c.insumo_id ORDER BY c.compra_id DESC");
-            ResultSet rs = stmt.executeQuery();
-            return mapearLista(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Não foi possível buscar as compras", e);
-        }
-    }
-
-    private List<Compra> mapearLista(ResultSet rs) throws SQLException {
-        List<Compra> compras = new ArrayList<>();
-        while (rs.next()) {
-            compras.add(mapear(rs));
-        }
-        return compras;
-    }
-
-    private Compra mapear(ResultSet rs) throws SQLException {
+    @Override
+    protected Compra mapear(ResultSet rs) throws SQLException {
         Insumo insumo = new Insumo();
         insumo.setId(rs.getLong("insumo_id"));
         insumo.setNome(rs.getString("nome"));

@@ -18,7 +18,8 @@ public class ReceitaService {
     public Receita salvar(Receita receita) {
         receita = receitaDAO.salvar(receita);
         for (ItensReceita item : receita.getInsumos()) {
-            itensReceitaService.salvar(item, receita.getId());
+            item.setReceita(receita);
+            itensReceitaService.salvar(item);
         }
         return receita;
     }
@@ -27,7 +28,8 @@ public class ReceitaService {
         receita = receitaDAO.editar(receita);
         itensReceitaService.deletarPorReceita(receita.getId());
         for (ItensReceita item : receita.getInsumos()) {
-            itensReceitaService.salvar(item, receita.getId());
+            item.setReceita(receita);
+            itensReceitaService.salvar(item);
         }
         return receita;
     }
