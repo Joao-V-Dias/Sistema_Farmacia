@@ -1,7 +1,7 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Usuario;
-import com.joao.sistemafarmacia.service.UsuarioService;
+import com.joao.sistemafarmacia.controller.UsuarioController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -9,12 +9,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class UsuarioListaPanel extends javax.swing.JPanel {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioController usuarioController;
     private List<Usuario> usuarios;
 
     public UsuarioListaPanel() {
         initComponents();
-        this.usuarioService = new UsuarioService();
+        this.usuarioController = new UsuarioController();
         this.usuarios = new ArrayList<>();
     }
 
@@ -91,7 +91,7 @@ public class UsuarioListaPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            usuarios = usuarioService.buscarUsuarios();
+            usuarios = usuarioController.buscarUsuarios();
             preencherTabela(usuarios);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
@@ -100,7 +100,7 @@ public class UsuarioListaPanel extends javax.swing.JPanel {
 
     private void buscarUsuarios() {
         try {
-            usuarios = usuarioService.buscarUsuarios(txtUsuario.getText());
+            usuarios = usuarioController.buscarUsuarios(txtUsuario.getText());
             preencherTabela(usuarios);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());

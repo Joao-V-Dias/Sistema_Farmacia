@@ -1,14 +1,14 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.ItensReceitaDAO;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import java.util.List;
 
-public class ItensReceitaService {
+public class ItensReceitaController {
 
     private final ItensReceitaDAO itensReceitaDAO;
 
-    public ItensReceitaService() {
+    public ItensReceitaController() {
         this.itensReceitaDAO = new ItensReceitaDAO();
     }
 

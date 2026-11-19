@@ -3,7 +3,7 @@ package com.joao.sistemafarmacia.view;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
-import com.joao.sistemafarmacia.service.ManipulacaoService;
+import com.joao.sistemafarmacia.controller.ManipulacaoController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -11,12 +11,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class ManipulacaoPanel extends javax.swing.JPanel {
 
-    private final ManipulacaoService manipulacaoService;
+    private final ManipulacaoController manipulacaoController;
     private List<Pedido> pedidos;
 
     public ManipulacaoPanel() {
         initComponents();
-        this.manipulacaoService = new ManipulacaoService();
+        this.manipulacaoController = new ManipulacaoController();
         this.pedidos = new ArrayList<>();
     }
 
@@ -118,7 +118,7 @@ public class ManipulacaoPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            pedidos = manipulacaoService.buscarPedidos();
+            pedidos = manipulacaoController.buscarPedidos();
             preencherTabelaPedidos(pedidos);
             preencherTabelaReceitas(new ArrayList<>());
         } catch (RuntimeException ex) {
@@ -128,7 +128,7 @@ public class ManipulacaoPanel extends javax.swing.JPanel {
 
     private void carregarReceitas(Pedido pedido) {
         try {
-            preencherTabelaReceitas(manipulacaoService.buscarReceitas(pedido.getId()));
+            preencherTabelaReceitas(manipulacaoController.buscarReceitas(pedido.getId()));
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }
@@ -141,7 +141,7 @@ public class ManipulacaoPanel extends javax.swing.JPanel {
         }
         if (JOptionPane.showConfirmDialog(this, "Confirmar a manipulação do pedido " + pedido.getId() + "? O estoque será baixado.") == 0) {
             try {
-                manipulacaoService.manipular(pedido);
+                manipulacaoController.manipular(pedido);
                 mensagem("Pedido " + pedido.getId() + " manipulado, estoque atualizado");
                 carregarTodos();
             } catch (RuntimeException ex) {

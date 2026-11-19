@@ -1,48 +1,48 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
 import java.util.List;
 
-public class ManipulacaoService {
+public class ManipulacaoController {
 
-    private final PedidoService pedidoService;
-    private final ReceitaService receitaService;
-    private final InsumoService insumoService;
+    private final PedidoController pedidoController;
+    private final ReceitaController receitaController;
+    private final InsumoController insumoController;
 
-    public ManipulacaoService() {
-        this.pedidoService = new PedidoService();
-        this.receitaService = new ReceitaService();
-        this.insumoService = new InsumoService();
+    public ManipulacaoController() {
+        this.pedidoController = new PedidoController();
+        this.receitaController = new ReceitaController();
+        this.insumoController = new InsumoController();
     }
 
     public List<Pedido> buscarPedidos() {
-        return pedidoService.buscarPedidos();
+        return pedidoController.buscarPedidos();
     }
 
     public List<Pedido> buscarPedidosManipulados() {
-        return pedidoService.buscarPedidos("MANIPULADO");
+        return pedidoController.buscarPedidos("MANIPULADO");
     }
 
     public List<Receita> buscarReceitas(Long pedidoId) {
-        return receitaService.buscarReceitas(pedidoId);
+        return receitaController.buscarReceitas(pedidoId);
     }
 
     public Pedido manipular(Pedido pedido) {
         if (!pedido.getStatus().equals("PENDENTE")) {
             throw new IllegalArgumentException("Este pedido já foi manipulado");
         }
-        List<Receita> receitas = receitaService.buscarReceitas(pedido.getId());
+        List<Receita> receitas = receitaController.buscarReceitas(pedido.getId());
         validarEstoque(receitas);
 
         for (Receita receita : receitas) {
             for (ItensReceita item : receita.getInsumos()) {
-                insumoService.darBaixa(item.getInsumo().getId(), item.getQuantidade());
+                insumoController.darBaixa(item.getInsumo().getId(), item.getQuantidade());
             }
         }
         pedido.setStatus("MANIPULADO");
-        return pedidoService.editar(pedido);
+        return pedidoController.editar(pedido);
     }
 
     public Pedido liberarEntrega(Pedido pedido) {
@@ -50,7 +50,7 @@ public class ManipulacaoService {
             throw new IllegalArgumentException("Este pedido já foi auditado");
         }
         pedido.setStatus("LIBERADO PARA ENTREGA");
-        return pedidoService.editar(pedido);
+        return pedidoController.editar(pedido);
     }
 
     public Pedido reprovar(Pedido pedido) {
@@ -58,7 +58,7 @@ public class ManipulacaoService {
             throw new IllegalArgumentException("Este pedido já foi auditado");
         }
         pedido.setStatus("REPROVADO");
-        return pedidoService.editar(pedido);
+        return pedidoController.editar(pedido);
     }
 
     private void validarEstoque(List<Receita> receitas) {

@@ -1,18 +1,18 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Usuario;
-import com.joao.sistemafarmacia.service.UsuarioService;
+import com.joao.sistemafarmacia.controller.UsuarioController;
 import java.security.NoSuchAlgorithmException;
 import javax.mail.internet.AddressException;
 import javax.swing.JOptionPane;
 
 public class LoginView extends javax.swing.JFrame {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioController usuarioController;
 
     public LoginView() {
         initComponents();
-        this.usuarioService = new UsuarioService();
+        this.usuarioController = new UsuarioController();
     }
 
     @SuppressWarnings("unchecked")
@@ -103,7 +103,7 @@ public class LoginView extends javax.swing.JFrame {
 
     private void fazerLogin() {
         try {
-            if (usuarioService.fazerLogin(mapearUsuario())) {
+            if (usuarioController.fazerLogin(mapearUsuario())) {
                 new Index().setVisible(true);
                 this.dispose();
                 return;

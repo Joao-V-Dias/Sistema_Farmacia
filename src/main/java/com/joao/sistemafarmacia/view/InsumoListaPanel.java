@@ -1,7 +1,7 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Insumo;
-import com.joao.sistemafarmacia.service.InsumoService;
+import com.joao.sistemafarmacia.controller.InsumoController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -9,12 +9,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class InsumoListaPanel extends javax.swing.JPanel {
 
-    private final InsumoService insumoService;
+    private final InsumoController insumoController;
     private List<Insumo> insumos;
 
     public InsumoListaPanel() {
         initComponents();
-        this.insumoService = new InsumoService();
+        this.insumoController = new InsumoController();
         this.insumos = new ArrayList<>();
     }
 
@@ -91,7 +91,7 @@ public class InsumoListaPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            insumos = insumoService.buscarInsumos();
+            insumos = insumoController.buscarInsumos();
             preencherTabela(insumos);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
@@ -100,7 +100,7 @@ public class InsumoListaPanel extends javax.swing.JPanel {
 
     private void buscarInsumos() {
         try {
-            insumos = insumoService.buscarInsumos(txtInsumo.getText());
+            insumos = insumoController.buscarInsumos(txtInsumo.getText());
             preencherTabela(insumos);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());

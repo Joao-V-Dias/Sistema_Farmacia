@@ -1,7 +1,7 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Pedido;
-import com.joao.sistemafarmacia.service.PedidoService;
+import com.joao.sistemafarmacia.controller.PedidoController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -9,12 +9,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class PedidoListaPanel extends javax.swing.JPanel {
 
-    private final PedidoService pedidoService;
+    private final PedidoController pedidoController;
     private List<Pedido> pedidos;
 
     public PedidoListaPanel() {
         initComponents();
-        this.pedidoService = new PedidoService();
+        this.pedidoController = new PedidoController();
         this.pedidos = new ArrayList<>();
     }
 
@@ -88,7 +88,7 @@ public class PedidoListaPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            pedidos = pedidoService.buscarPedidos();
+            pedidos = pedidoController.buscarPedidos();
             preencherTabela(pedidos);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
@@ -97,7 +97,7 @@ public class PedidoListaPanel extends javax.swing.JPanel {
 
     private void buscarPedidos() {
         try {
-            pedidos = pedidoService.buscarPedidosPorCpf(txtCpf.getText());
+            pedidos = pedidoController.buscarPedidosPorCpf(txtCpf.getText());
             preencherTabela(pedidos);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());

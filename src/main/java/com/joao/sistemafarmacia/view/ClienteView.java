@@ -1,7 +1,7 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Cliente;
-import com.joao.sistemafarmacia.service.ClienteService;
+import com.joao.sistemafarmacia.controller.ClienteController;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -9,16 +9,16 @@ import javax.swing.JOptionPane;
 
 public class ClienteView extends javax.swing.JFrame {
 
-    private final ClienteService clienteService;
+    private final ClienteController clienteController;
 
     public ClienteView() {
         initComponents();
-        this.clienteService = new ClienteService();
+        this.clienteController = new ClienteController();
     }
 
     public ClienteView(Cliente cliente) {
         initComponents();
-        this.clienteService = new ClienteService();
+        this.clienteController = new ClienteController();
         mapearCampos(cliente);
         btnEditar.setEnabled(true);
         btnExcluir.setEnabled(true);
@@ -179,7 +179,7 @@ public class ClienteView extends javax.swing.JFrame {
 
     private void salvar() {
         try {
-            Cliente cliente = clienteService.salvar(mapearCliente());
+            Cliente cliente = clienteController.salvar(mapearCliente());
             mensagem("Cliente " + cliente.getNome() + " salvo com sucesso");
             this.dispose();
         } catch (RuntimeException ex) {
@@ -191,7 +191,7 @@ public class ClienteView extends javax.swing.JFrame {
         try {
             Cliente cliente = mapearCliente();
             cliente.setId(Long.valueOf(txtId.getText()));
-            clienteService.editar(cliente);
+            clienteController.editar(cliente);
             mensagem("Cliente " + cliente.getNome() + " editado com sucesso");
             this.dispose();
         } catch (RuntimeException ex) {
@@ -202,7 +202,7 @@ public class ClienteView extends javax.swing.JFrame {
     private void excluir() {
         if (JOptionPane.showConfirmDialog(this, "Deseja remover este item?") == 0) {
             try {
-                clienteService.deletar(Long.valueOf(txtId.getText()));
+                clienteController.deletar(Long.valueOf(txtId.getText()));
                 this.dispose();
             } catch (RuntimeException ex) {
                 mensagem(ex.getMessage());

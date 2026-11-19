@@ -1,20 +1,20 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.CompraDAO;
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Insumo;
 import java.util.List;
 
-public class CompraService {
+public class CompraController {
 
     private final CompraDAO compraDAO;
-    private final SolicitacaoService solicitacaoService;
-    private final InsumoService insumoService;
+    private final SolicitacaoController solicitacaoController;
+    private final InsumoController insumoController;
 
-    public CompraService() {
+    public CompraController() {
         this.compraDAO = new CompraDAO();
-        this.solicitacaoService = new SolicitacaoService();
-        this.insumoService = new InsumoService();
+        this.solicitacaoController = new SolicitacaoController();
+        this.insumoController = new InsumoController();
     }
 
     public Compra salvar(Compra compra) {
@@ -29,7 +29,7 @@ public class CompraService {
         compra = compraDAO.salvar(compra);
 
         compra.getSolicitacao().setStatus("COMPRADA");
-        solicitacaoService.editar(compra.getSolicitacao());
+        solicitacaoController.editar(compra.getSolicitacao());
         return compra;
     }
 
@@ -43,7 +43,7 @@ public class CompraService {
         }
         Insumo insumo = compra.getInsumo();
         insumo.setQuantidade(insumo.getQuantidade() + compra.getQuantidade());
-        insumoService.editar(insumo);
+        insumoController.editar(insumo);
 
         compra.setStatus("RECEBIDA");
         return compraDAO.editar(compra);

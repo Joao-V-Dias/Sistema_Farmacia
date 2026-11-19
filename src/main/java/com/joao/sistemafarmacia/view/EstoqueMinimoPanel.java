@@ -2,8 +2,8 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.model.Solicitacao;
-import com.joao.sistemafarmacia.service.InsumoService;
-import com.joao.sistemafarmacia.service.SolicitacaoService;
+import com.joao.sistemafarmacia.controller.InsumoController;
+import com.joao.sistemafarmacia.controller.SolicitacaoController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -11,14 +11,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class EstoqueMinimoPanel extends javax.swing.JPanel {
 
-    private final InsumoService insumoService;
-    private final SolicitacaoService solicitacaoService;
+    private final InsumoController insumoController;
+    private final SolicitacaoController solicitacaoController;
     private List<Insumo> insumos;
 
     public EstoqueMinimoPanel() {
         initComponents();
-        this.insumoService = new InsumoService();
-        this.solicitacaoService = new SolicitacaoService();
+        this.insumoController = new InsumoController();
+        this.solicitacaoController = new SolicitacaoController();
         this.insumos = new ArrayList<>();
     }
 
@@ -82,7 +82,7 @@ public class EstoqueMinimoPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            insumos = insumoService.buscarInsumosEstoqueMinimo();
+            insumos = insumoController.buscarInsumosEstoqueMinimo();
             preencherTabela(insumos);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
@@ -99,7 +99,7 @@ public class EstoqueMinimoPanel extends javax.swing.JPanel {
             return;
         }
         try {
-            Solicitacao solicitacao = solicitacaoService.salvar(mapearSolicitacao(insumo, quantidade));
+            Solicitacao solicitacao = solicitacaoController.salvar(mapearSolicitacao(insumo, quantidade));
             mensagem("Solicitação " + solicitacao.getId() + " criada com sucesso");
         } catch (NumberFormatException ex) {
             mensagem("Quantidade inválida");

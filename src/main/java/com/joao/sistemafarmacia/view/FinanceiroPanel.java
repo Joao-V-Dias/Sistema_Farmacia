@@ -2,7 +2,7 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Solicitacao;
-import com.joao.sistemafarmacia.service.FinanceiroService;
+import com.joao.sistemafarmacia.controller.FinanceiroController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -10,12 +10,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class FinanceiroPanel extends javax.swing.JPanel {
 
-    private final FinanceiroService financeiroService;
+    private final FinanceiroController financeiroController;
     private List<Solicitacao> solicitacoes;
 
     public FinanceiroPanel() {
         initComponents();
-        this.financeiroService = new FinanceiroService();
+        this.financeiroController = new FinanceiroController();
         this.solicitacoes = new ArrayList<>();
     }
 
@@ -145,15 +145,15 @@ public class FinanceiroPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            txtValorEstoque.setText(String.valueOf(financeiroService.buscarValorEstoque()));
+            txtValorEstoque.setText(String.valueOf(financeiroController.buscarValorEstoque()));
 
-            solicitacoes = financeiroService.buscarSolicitacoes();
+            solicitacoes = financeiroController.buscarSolicitacoes();
             preencherTabelaSolicitacoes(solicitacoes);
-            txtTotalSolicitacoes.setText(String.valueOf(financeiroService.calcularTotalSolicitacoes(solicitacoes)));
+            txtTotalSolicitacoes.setText(String.valueOf(financeiroController.calcularTotalSolicitacoes(solicitacoes)));
 
-            List<Compra> compras = financeiroService.buscarCompras();
+            List<Compra> compras = financeiroController.buscarCompras();
             preencherTabelaCompras(compras);
-            txtTotalCompras.setText(String.valueOf(financeiroService.calcularTotalCompras(compras)));
+            txtTotalCompras.setText(String.valueOf(financeiroController.calcularTotalCompras(compras)));
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }

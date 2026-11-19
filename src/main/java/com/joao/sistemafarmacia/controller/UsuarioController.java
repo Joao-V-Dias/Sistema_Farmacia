@@ -1,4 +1,4 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.UsuarioDAO;
 import com.joao.sistemafarmacia.model.Usuario;
@@ -7,11 +7,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.mail.internet.AddressException;
 
-public class UsuarioService {
+public class UsuarioController {
 
     private final UsuarioDAO usuarioDAO;
 
-    public UsuarioService() {
+    public UsuarioController() {
         this.usuarioDAO = new UsuarioDAO();
     }
 

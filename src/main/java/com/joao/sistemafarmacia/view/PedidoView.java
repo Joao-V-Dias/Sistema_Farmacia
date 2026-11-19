@@ -5,10 +5,10 @@ import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
-import com.joao.sistemafarmacia.service.ClienteService;
-import com.joao.sistemafarmacia.service.InsumoService;
-import com.joao.sistemafarmacia.service.PedidoService;
-import com.joao.sistemafarmacia.service.ReceitaService;
+import com.joao.sistemafarmacia.controller.ClienteController;
+import com.joao.sistemafarmacia.controller.InsumoController;
+import com.joao.sistemafarmacia.controller.PedidoController;
+import com.joao.sistemafarmacia.controller.ReceitaController;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -19,10 +19,10 @@ import javax.swing.table.DefaultTableModel;
 
 public class PedidoView extends javax.swing.JFrame {
 
-    private final PedidoService pedidoService;
-    private final ReceitaService receitaService;
-    private final ClienteService clienteService;
-    private final InsumoService insumoService;
+    private final PedidoController pedidoController;
+    private final ReceitaController receitaController;
+    private final ClienteController clienteController;
+    private final InsumoController insumoController;
     private List<Cliente> clientes;
     private List<Insumo> insumos;
     private List<Receita> receitas;
@@ -30,10 +30,10 @@ public class PedidoView extends javax.swing.JFrame {
 
     public PedidoView() {
         initComponents();
-        this.pedidoService = new PedidoService();
-        this.receitaService = new ReceitaService();
-        this.clienteService = new ClienteService();
-        this.insumoService = new InsumoService();
+        this.pedidoController = new PedidoController();
+        this.receitaController = new ReceitaController();
+        this.clienteController = new ClienteController();
+        this.insumoController = new InsumoController();
         this.clientes = new ArrayList<>();
         this.receitas = new ArrayList<>();
         carregarInsumos();
@@ -294,7 +294,7 @@ public class PedidoView extends javax.swing.JFrame {
 
     private void salvar() {
         try {
-            Pedido pedido = pedidoService.salvar(mapearPedido());
+            Pedido pedido = pedidoController.salvar(mapearPedido());
             mensagem("Pedido " + pedido.getId() + " salvo com sucesso");
             this.dispose();
         } catch (RuntimeException ex) {
@@ -318,7 +318,7 @@ public class PedidoView extends javax.swing.JFrame {
 
     private void buscarClientes() {
         try {
-            clientes = clienteService.buscarClientes(txtCpf.getText());
+            clientes = clienteController.buscarClientes(txtCpf.getText());
             cbCliente.removeAllItems();
             clientes.forEach(cliente -> cbCliente.addItem(cliente.getCpf() + " - " + cliente.getNome()));
         } catch (RuntimeException ex) {
@@ -397,7 +397,7 @@ public class PedidoView extends javax.swing.JFrame {
 
     private void carregarInsumos() {
         try {
-            insumos = insumoService.buscarInsumos(txtInsumo.getText());
+            insumos = insumoController.buscarInsumos(txtInsumo.getText());
             cbInsumo.removeAllItems();
             insumos.forEach(insumo -> cbInsumo.addItem(insumo.getNome()));
         } catch (RuntimeException ex) {
@@ -466,7 +466,7 @@ public class PedidoView extends javax.swing.JFrame {
     private void atualizarTabelas() {
         preencherTabelaReceitas(receitas);
         preencherTabelaItens(receitaSelecionada);
-        txtValorTotal.setText(String.valueOf(pedidoService.calcularTotal(receitas)));
+        txtValorTotal.setText(String.valueOf(pedidoController.calcularTotal(receitas)));
     }
 
     private void preencherTabelaReceitas(List<Receita> receitas) {
@@ -474,7 +474,7 @@ public class PedidoView extends javax.swing.JFrame {
         tabelaReceitas.setNumRows(0);
 
         receitas.forEach(receita -> tabelaReceitas.addRow(new Object[]{
-            receita.getCodigo(), receita.getNomeMedico(), receita.getDataEmissao(), receitaService.calcularValor(receita)
+            receita.getCodigo(), receita.getNomeMedico(), receita.getDataEmissao(), receitaController.calcularValor(receita)
         }));
 
         if (receitaSelecionada != null) {

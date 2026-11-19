@@ -3,7 +3,7 @@ package com.joao.sistemafarmacia.view;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
-import com.joao.sistemafarmacia.service.AuditoriaService;
+import com.joao.sistemafarmacia.controller.AuditoriaController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -11,12 +11,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
 
-    private final AuditoriaService auditoriaService;
+    private final AuditoriaController auditoriaController;
     private List<Pedido> pedidos;
 
     public AuditoriaManipulacaoPanel() {
         initComponents();
-        this.auditoriaService = new AuditoriaService();
+        this.auditoriaController = new AuditoriaController();
         this.pedidos = new ArrayList<>();
     }
 
@@ -129,7 +129,7 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            pedidos = auditoriaService.buscarPedidosManipulados();
+            pedidos = auditoriaController.buscarPedidosManipulados();
             preencherTabelaPedidos(pedidos);
             preencherTabelaReceitas(new ArrayList<>());
         } catch (RuntimeException ex) {
@@ -139,7 +139,7 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
 
     private void carregarReceitas(Pedido pedido) {
         try {
-            preencherTabelaReceitas(auditoriaService.buscarReceitas(pedido.getId()));
+            preencherTabelaReceitas(auditoriaController.buscarReceitas(pedido.getId()));
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }
@@ -151,7 +151,7 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
             return;
         }
         try {
-            auditoriaService.liberarEntrega(pedido);
+            auditoriaController.liberarEntrega(pedido);
             mensagem("Pedido " + pedido.getId() + " liberado para entrega");
             carregarTodos();
         } catch (RuntimeException ex) {
@@ -165,7 +165,7 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
             return;
         }
         try {
-            auditoriaService.reprovarManipulacao(pedido);
+            auditoriaController.reprovarManipulacao(pedido);
             mensagem("Pedido " + pedido.getId() + " reprovado");
             carregarTodos();
         } catch (RuntimeException ex) {

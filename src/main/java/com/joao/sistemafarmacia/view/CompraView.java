@@ -2,17 +2,17 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Solicitacao;
-import com.joao.sistemafarmacia.service.CompraService;
+import com.joao.sistemafarmacia.controller.CompraController;
 import javax.swing.JOptionPane;
 
 public class CompraView extends javax.swing.JFrame {
 
-    private final CompraService compraService;
+    private final CompraController compraController;
     private final Solicitacao solicitacao;
 
     public CompraView(Solicitacao solicitacao) {
         initComponents();
-        this.compraService = new CompraService();
+        this.compraController = new CompraController();
         this.solicitacao = solicitacao;
         mapearCampos(solicitacao);
     }
@@ -133,7 +133,7 @@ public class CompraView extends javax.swing.JFrame {
 
     private void salvar() {
         try {
-            Compra compra = compraService.salvar(mapearCompra());
+            Compra compra = compraController.salvar(mapearCompra());
             mensagem("Compra " + compra.getId() + " registrada com sucesso");
             this.dispose();
         } catch (RuntimeException ex) {

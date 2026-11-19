@@ -1,14 +1,14 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.InsumoDAO;
 import com.joao.sistemafarmacia.model.Insumo;
 import java.util.List;
 
-public class InsumoService {
+public class InsumoController {
 
     private final InsumoDAO insumoDAO;
 
-    public InsumoService() {
+    public InsumoController() {
         this.insumoDAO = new InsumoDAO();
     }
 

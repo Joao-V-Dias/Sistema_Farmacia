@@ -1,7 +1,7 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Compra;
-import com.joao.sistemafarmacia.service.AuditoriaService;
+import com.joao.sistemafarmacia.controller.AuditoriaController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -9,12 +9,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
 
-    private final AuditoriaService auditoriaService;
+    private final AuditoriaController auditoriaController;
     private List<Compra> compras;
 
     public AuditoriaRecebimentoPanel() {
         initComponents();
-        this.auditoriaService = new AuditoriaService();
+        this.auditoriaController = new AuditoriaController();
         this.compras = new ArrayList<>();
     }
 
@@ -90,7 +90,7 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            compras = auditoriaService.buscarCompras();
+            compras = auditoriaController.buscarCompras();
             preencherTabela(compras);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
@@ -103,7 +103,7 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
             return;
         }
         try {
-            auditoriaService.confirmarRecebimento(compra);
+            auditoriaController.confirmarRecebimento(compra);
             mensagem("Compra " + compra.getId() + " recebida, estoque atualizado");
             carregarTodos();
         } catch (RuntimeException ex) {
@@ -117,7 +117,7 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
             return;
         }
         try {
-            auditoriaService.marcarDivergente(compra);
+            auditoriaController.marcarDivergente(compra);
             mensagem("Compra " + compra.getId() + " marcada como divergente");
             carregarTodos();
         } catch (RuntimeException ex) {

@@ -2,7 +2,7 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Receita;
-import com.joao.sistemafarmacia.service.ReceitaService;
+import com.joao.sistemafarmacia.controller.ReceitaController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -10,12 +10,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class PedidoReceitasView extends javax.swing.JFrame {
 
-    private final ReceitaService receitaService;
+    private final ReceitaController receitaController;
     private List<Receita> receitas;
 
     public PedidoReceitasView(Long pedidoId) {
         initComponents();
-        this.receitaService = new ReceitaService();
+        this.receitaController = new ReceitaController();
         this.receitas = new ArrayList<>();
         txtTitulo.setText("RECEITAS DO PEDIDO " + pedidoId);
         carregarReceitas(pedidoId);
@@ -111,7 +111,7 @@ public class PedidoReceitasView extends javax.swing.JFrame {
 
     private void carregarReceitas(Long pedidoId) {
         try {
-            receitas = receitaService.buscarReceitas(pedidoId);
+            receitas = receitaController.buscarReceitas(pedidoId);
             preencherTabelaReceitas(receitas);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());

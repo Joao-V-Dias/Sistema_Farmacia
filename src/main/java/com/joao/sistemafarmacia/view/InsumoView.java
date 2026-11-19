@@ -1,21 +1,21 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Insumo;
-import com.joao.sistemafarmacia.service.InsumoService;
+import com.joao.sistemafarmacia.controller.InsumoController;
 import javax.swing.JOptionPane;
 
 public class InsumoView extends javax.swing.JFrame {
 
-    private final InsumoService insumoService;
+    private final InsumoController insumoController;
 
     public InsumoView() {
         initComponents();
-        this.insumoService = new InsumoService();
+        this.insumoController = new InsumoController();
     }
 
     public InsumoView(Insumo insumo) {
         initComponents();
-        this.insumoService = new InsumoService();
+        this.insumoController = new InsumoController();
         mapearCampos(insumo);
         btnEditar.setEnabled(true);
         btnExcluir.setEnabled(true);
@@ -160,7 +160,7 @@ public class InsumoView extends javax.swing.JFrame {
 
     private void salvar() {
         try {
-            Insumo insumo = insumoService.salvar(mapearInsumo());
+            Insumo insumo = insumoController.salvar(mapearInsumo());
             mensagem("Insumo " + insumo.getNome() + " salvo com sucesso");
             this.dispose();
         } catch (RuntimeException ex) {
@@ -172,7 +172,7 @@ public class InsumoView extends javax.swing.JFrame {
         try {
             Insumo insumo = mapearInsumo();
             insumo.setId(Long.valueOf(txtId.getText()));
-            insumoService.editar(insumo);
+            insumoController.editar(insumo);
             mensagem("Insumo " + insumo.getNome() + " editado com sucesso");
             this.dispose();
         } catch (RuntimeException ex) {
@@ -183,7 +183,7 @@ public class InsumoView extends javax.swing.JFrame {
     private void excluir() {
         if (JOptionPane.showConfirmDialog(this, "Deseja remover este item?") == 0) {
             try {
-                insumoService.deletar(Long.valueOf(txtId.getText()));
+                insumoController.deletar(Long.valueOf(txtId.getText()));
                 this.dispose();
             } catch (RuntimeException ex) {
                 mensagem(ex.getMessage());

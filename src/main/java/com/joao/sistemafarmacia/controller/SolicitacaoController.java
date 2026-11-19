@@ -1,15 +1,15 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.SolicitacaoDAO;
 import com.joao.sistemafarmacia.model.Solicitacao;
 import java.time.LocalDate;
 import java.util.List;
 
-public class SolicitacaoService {
+public class SolicitacaoController {
 
     private final SolicitacaoDAO solicitacaoDAO;
 
-    public SolicitacaoService() {
+    public SolicitacaoController() {
         this.solicitacaoDAO = new SolicitacaoDAO();
     }
 

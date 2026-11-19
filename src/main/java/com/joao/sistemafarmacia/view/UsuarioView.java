@@ -1,7 +1,7 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Usuario;
-import com.joao.sistemafarmacia.service.UsuarioService;
+import com.joao.sistemafarmacia.controller.UsuarioController;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,16 +11,16 @@ import javax.swing.JOptionPane;
 
 public class UsuarioView extends javax.swing.JFrame {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioController usuarioController;
 
     public UsuarioView() {
         initComponents();
-        this.usuarioService = new UsuarioService();
+        this.usuarioController = new UsuarioController();
     }
 
     public UsuarioView(Usuario usuario) {
         initComponents();
-        this.usuarioService = new UsuarioService();
+        this.usuarioController = new UsuarioController();
         mapearCampos(usuario);
         txtEmail.setEnabled(false);
         btnEditar.setEnabled(true);
@@ -198,7 +198,7 @@ public class UsuarioView extends javax.swing.JFrame {
 
     private void salvar() {
         try {
-            Usuario usuario = usuarioService.salvar(mapearUsuario());
+            Usuario usuario = usuarioController.salvar(mapearUsuario());
             mensagem("Usuário " + usuario.getNome() + " salvo com sucesso");
             this.dispose();
         } catch (AddressException | NoSuchAlgorithmException | RuntimeException ex) {
@@ -210,7 +210,7 @@ public class UsuarioView extends javax.swing.JFrame {
         try {
             Usuario usuario = mapearUsuario();
             usuario.setId(Long.valueOf(txtId.getText()));
-            usuarioService.editar(usuario);
+            usuarioController.editar(usuario);
             mensagem("Usuário " + usuario.getNome() + " editado com sucesso");
             this.dispose();
         } catch (AddressException | NoSuchAlgorithmException | RuntimeException ex) {
@@ -221,7 +221,7 @@ public class UsuarioView extends javax.swing.JFrame {
     private void excluir() {
         if (JOptionPane.showConfirmDialog(this, "Deseja remover este item?") == 0) {
             try {
-                usuarioService.deletar(Long.valueOf(txtId.getText()));
+                usuarioController.deletar(Long.valueOf(txtId.getText()));
                 this.dispose();
             } catch (RuntimeException ex) {
                 mensagem(ex.getMessage());

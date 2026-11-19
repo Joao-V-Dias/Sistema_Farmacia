@@ -1,20 +1,20 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.FinanceiroDAO;
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Solicitacao;
 import java.util.List;
 
-public class FinanceiroService {
+public class FinanceiroController {
 
     private final FinanceiroDAO financeiroDAO;
-    private final SolicitacaoService solicitacaoService;
-    private final CompraService compraService;
+    private final SolicitacaoController solicitacaoController;
+    private final CompraController compraController;
 
-    public FinanceiroService() {
+    public FinanceiroController() {
         this.financeiroDAO = new FinanceiroDAO();
-        this.solicitacaoService = new SolicitacaoService();
-        this.compraService = new CompraService();
+        this.solicitacaoController = new SolicitacaoController();
+        this.compraController = new CompraController();
     }
 
     public double buscarValorEstoque() {
@@ -22,7 +22,7 @@ public class FinanceiroService {
     }
 
     public List<Solicitacao> buscarSolicitacoes() {
-        return solicitacaoService.buscarSolicitacoes();
+        return solicitacaoController.buscarSolicitacoes();
     }
 
     public double calcularTotalSolicitacoes(List<Solicitacao> solicitacoes) {
@@ -34,7 +34,7 @@ public class FinanceiroService {
     }
 
     public List<Compra> buscarCompras() {
-        return compraService.buscarCompras();
+        return compraController.buscarCompras();
     }
 
     public double calcularTotalCompras(List<Compra> compras) {

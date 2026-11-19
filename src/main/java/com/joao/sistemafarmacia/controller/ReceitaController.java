@@ -1,41 +1,41 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.ReceitaDAO;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Receita;
 import java.util.List;
 
-public class ReceitaService {
+public class ReceitaController {
 
     private final ReceitaDAO receitaDAO;
-    private final ItensReceitaService itensReceitaService;
+    private final ItensReceitaController itensReceitaController;
 
-    public ReceitaService() {
+    public ReceitaController() {
         this.receitaDAO = new ReceitaDAO();
-        this.itensReceitaService = new ItensReceitaService();
+        this.itensReceitaController = new ItensReceitaController();
     }
 
     public Receita salvar(Receita receita) {
         receita = receitaDAO.salvar(receita);
         for (ItensReceita item : receita.getInsumos()) {
             item.setReceita(receita);
-            itensReceitaService.salvar(item);
+            itensReceitaController.salvar(item);
         }
         return receita;
     }
 
     public Receita editar(Receita receita) {
         receita = receitaDAO.editar(receita);
-        itensReceitaService.deletarPorReceita(receita.getId());
+        itensReceitaController.deletarPorReceita(receita.getId());
         for (ItensReceita item : receita.getInsumos()) {
             item.setReceita(receita);
-            itensReceitaService.salvar(item);
+            itensReceitaController.salvar(item);
         }
         return receita;
     }
 
     public void deletar(Long id) {
-        itensReceitaService.deletarPorReceita(id);
+        itensReceitaController.deletarPorReceita(id);
         receitaDAO.deletar(id);
     }
 
@@ -61,7 +61,7 @@ public class ReceitaService {
 
     private List<Receita> carregarItens(List<Receita> receitas) {
         for (Receita receita : receitas) {
-            receita.setInsumos(itensReceitaService.buscarItens(receita.getId()));
+            receita.setInsumos(itensReceitaController.buscarItens(receita.getId()));
         }
         return receitas;
     }

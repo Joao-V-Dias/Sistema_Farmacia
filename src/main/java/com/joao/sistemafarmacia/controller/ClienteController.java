@@ -1,14 +1,14 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.ClienteDAO;
 import com.joao.sistemafarmacia.model.Cliente;
 import java.util.List;
 
-public class ClienteService {
+public class ClienteController {
 
     private final ClienteDAO clienteDAO;
 
-    public ClienteService() {
+    public ClienteController() {
         this.clienteDAO = new ClienteDAO();
     }
 

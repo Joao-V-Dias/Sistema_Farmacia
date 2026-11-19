@@ -1,4 +1,4 @@
-package com.joao.sistemafarmacia.service;
+package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.PedidoDAO;
 import com.joao.sistemafarmacia.model.Pedido;
@@ -6,14 +6,14 @@ import com.joao.sistemafarmacia.model.Receita;
 import java.time.LocalDate;
 import java.util.List;
 
-public class PedidoService {
+public class PedidoController {
 
     private final PedidoDAO pedidoDAO;
-    private final ReceitaService receitaService;
+    private final ReceitaController receitaController;
 
-    public PedidoService() {
+    public PedidoController() {
         this.pedidoDAO = new PedidoDAO();
-        this.receitaService = new ReceitaService();
+        this.receitaController = new ReceitaController();
     }
 
     public Pedido salvar(Pedido pedido) {
@@ -32,7 +32,7 @@ public class PedidoService {
         pedido = pedidoDAO.salvar(pedido);
         for (Receita receita : pedido.getReceitas()) {
             receita.setPedido(pedido);
-            receitaService.salvar(receita);
+            receitaController.salvar(receita);
         }
         return pedido;
     }
@@ -60,7 +60,7 @@ public class PedidoService {
     public double calcularTotal(List<Receita> receitas) {
         double total = 0;
         for (Receita receita : receitas) {
-            total += receitaService.calcularValor(receita);
+            total += receitaController.calcularValor(receita);
         }
         return total;
     }

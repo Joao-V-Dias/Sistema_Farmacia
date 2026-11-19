@@ -1,7 +1,7 @@
 package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Cliente;
-import com.joao.sistemafarmacia.service.ClienteService;
+import com.joao.sistemafarmacia.controller.ClienteController;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -9,12 +9,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class ClienteListaPanel extends javax.swing.JPanel {
 
-    private final ClienteService clienteService;
+    private final ClienteController clienteController;
     private List<Cliente> clientes;
 
     public ClienteListaPanel() {
         initComponents();
-        this.clienteService = new ClienteService();
+        this.clienteController = new ClienteController();
         this.clientes = new ArrayList<>();
     }
 
@@ -92,7 +92,7 @@ public class ClienteListaPanel extends javax.swing.JPanel {
 
     public void carregarTodos() {
         try {
-            clientes = clienteService.buscarClientes();
+            clientes = clienteController.buscarClientes();
             preencherTabela(clientes);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
@@ -101,7 +101,7 @@ public class ClienteListaPanel extends javax.swing.JPanel {
 
     private void buscarClientes() {
         try {
-            clientes = clienteService.buscarClientes(txtBuscarCliente.getText());
+            clientes = clienteController.buscarClientes(txtBuscarCliente.getText());
             preencherTabela(clientes);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
