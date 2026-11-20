@@ -10,13 +10,7 @@ import java.util.List;
 
 public class ItensReceitaDAO extends DAO<ItensReceita> {
 
-    private static final String CREATE = "INSERT INTO itens_receita (receita_id, insumo_id, quantidade) VALUES (?, ?, ?)";
-    private static final String READ = "SELECT ir.itens_receita_id, ir.receita_id, ir.quantidade AS quantidade_item, i.* FROM itens_receita ir "
-            + "INNER JOIN insumo i ON i.insumo_id = ir.insumo_id";
-    private static final String UPDATE = "UPDATE itens_receita SET receita_id=?, insumo_id=?, quantidade=? WHERE itens_receita_id=?";
-    private static final String DELETE = "DELETE FROM itens_receita WHERE itens_receita_id=?";
-
-    public ItensReceitaDAO() {
+    public ItensReceitaDAO(String CREATE, String READ, String UPDATE, String DELETE) {
         super(CREATE, READ, UPDATE, DELETE);
     }
 

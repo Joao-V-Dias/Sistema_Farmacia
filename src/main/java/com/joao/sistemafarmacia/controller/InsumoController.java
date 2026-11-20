@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.InsumoDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Insumo;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class InsumoController {
     private final InsumoDAO insumoDAO;
 
     public InsumoController() {
-        this.insumoDAO = new InsumoDAO();
+        this.insumoDAO = (InsumoDAO) DAOFactory.criar("insumo");
     }
 
     public Insumo salvar(Insumo insumo) {

@@ -10,12 +10,7 @@ import javax.mail.internet.AddressException;
 
 public class UsuarioDAO extends DAO<Usuario> {
 
-    private static final String CREATE = "INSERT INTO usuario (email, nome, senha, telefone, cpf, data_nascimento, cargo) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String READ = "SELECT usuario_id, nome, email, senha, cpf, telefone, data_nascimento, cargo FROM usuario";
-    private static final String UPDATE = "UPDATE usuario SET email=?, nome=?, senha=?, telefone=?, cpf=?, data_nascimento=?, cargo=? WHERE usuario_id=?";
-    private static final String DELETE = "DELETE FROM usuario WHERE usuario_id=?";
-
-    public UsuarioDAO() {
+    public UsuarioDAO(String CREATE, String READ, String UPDATE, String DELETE) {
         super(CREATE, READ, UPDATE, DELETE);
     }
 

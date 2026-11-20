@@ -10,13 +10,7 @@ import java.util.List;
 
 public class PedidoDAO extends DAO<Pedido> {
 
-    private static final String CREATE = "INSERT INTO pedido (data_pedido, cliente_id, valor, status) VALUES (?, ?, ?, ?)";
-    private static final String READ = "SELECT p.*, c.nome, c.cpf, c.telefone, c.rua, c.numero, c.data_nascimento FROM pedido p "
-            + "INNER JOIN cliente c ON c.cliente_id = p.cliente_id";
-    private static final String UPDATE = "UPDATE pedido SET data_pedido=?, cliente_id=?, valor=?, status=? WHERE pedido_id=?";
-    private static final String DELETE = "DELETE FROM pedido WHERE pedido_id=?";
-
-    public PedidoDAO() {
+    public PedidoDAO(String CREATE, String READ, String UPDATE, String DELETE) {
         super(CREATE, READ, UPDATE, DELETE);
     }
 

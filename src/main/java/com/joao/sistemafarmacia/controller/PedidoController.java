@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.PedidoDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public class PedidoController {
     private final ReceitaController receitaController;
 
     public PedidoController() {
-        this.pedidoDAO = new PedidoDAO();
+        this.pedidoDAO = (PedidoDAO) DAOFactory.criar("pedido");
         this.receitaController = new ReceitaController();
     }
 

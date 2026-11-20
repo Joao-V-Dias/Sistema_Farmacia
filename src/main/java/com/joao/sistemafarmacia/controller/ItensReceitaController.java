@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.ItensReceitaDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class ItensReceitaController {
     private final ItensReceitaDAO itensReceitaDAO;
 
     public ItensReceitaController() {
-        this.itensReceitaDAO = new ItensReceitaDAO();
+        this.itensReceitaDAO = (ItensReceitaDAO) DAOFactory.criar("itensReceita");
     }
 
     public ItensReceita salvar(ItensReceita item) {

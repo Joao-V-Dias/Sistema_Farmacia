@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.SolicitacaoDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Solicitacao;
 import java.time.LocalDate;
 import java.util.List;
@@ -10,7 +11,7 @@ public class SolicitacaoController {
     private final SolicitacaoDAO solicitacaoDAO;
 
     public SolicitacaoController() {
-        this.solicitacaoDAO = new SolicitacaoDAO();
+        this.solicitacaoDAO = (SolicitacaoDAO) DAOFactory.criar("solicitacao");
     }
 
     public Solicitacao salvar(Solicitacao solicitacao) {

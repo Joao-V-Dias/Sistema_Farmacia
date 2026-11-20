@@ -9,13 +9,7 @@ import java.sql.SQLException;
 
 public class SolicitacaoDAO extends DAO<Solicitacao> {
 
-    private static final String CREATE = "INSERT INTO solicitacao (insumo_id, quantidade, valor, data_solicitacao, status) VALUES (?, ?, ?, ?, ?)";
-    private static final String READ = "SELECT s.*, i.nome, i.valor AS valor_insumo, i.quantidade AS quantidade_insumo, i.minimo FROM solicitacao s "
-            + "INNER JOIN insumo i ON i.insumo_id = s.insumo_id ORDER BY s.solicitacao_id DESC";
-    private static final String UPDATE = "UPDATE solicitacao SET insumo_id=?, quantidade=?, valor=?, data_solicitacao=?, status=? WHERE solicitacao_id=?";
-    private static final String DELETE = "DELETE FROM solicitacao WHERE solicitacao_id=?";
-
-    public SolicitacaoDAO() {
+    public SolicitacaoDAO(String CREATE, String READ, String UPDATE, String DELETE) {
         super(CREATE, READ, UPDATE, DELETE);
     }
 

@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.UsuarioDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Usuario;
 import com.joao.sistemafarmacia.util.Hash;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +13,7 @@ public class UsuarioController {
     private final UsuarioDAO usuarioDAO;
 
     public UsuarioController() {
-        this.usuarioDAO = new UsuarioDAO();
+        this.usuarioDAO = (UsuarioDAO) DAOFactory.criar("usuario");
     }
 
     public Usuario salvar(Usuario usuario) throws NoSuchAlgorithmException {

@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.CompraDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Insumo;
 import java.util.List;
@@ -12,7 +13,7 @@ public class CompraController {
     private final InsumoController insumoController;
 
     public CompraController() {
-        this.compraDAO = new CompraDAO();
+        this.compraDAO = (CompraDAO) DAOFactory.criar("compra");
         this.solicitacaoController = new SolicitacaoController();
         this.insumoController = new InsumoController();
     }

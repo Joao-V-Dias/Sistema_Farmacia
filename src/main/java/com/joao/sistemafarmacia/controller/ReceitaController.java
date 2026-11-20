@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.ReceitaDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Receita;
 import java.util.List;
@@ -11,7 +12,7 @@ public class ReceitaController {
     private final ItensReceitaController itensReceitaController;
 
     public ReceitaController() {
-        this.receitaDAO = new ReceitaDAO();
+        this.receitaDAO = (ReceitaDAO) DAOFactory.criar("receita");
         this.itensReceitaController = new ItensReceitaController();
     }
 

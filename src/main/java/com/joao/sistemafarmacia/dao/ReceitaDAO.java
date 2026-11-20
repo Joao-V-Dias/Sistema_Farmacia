@@ -10,12 +10,7 @@ import java.util.List;
 
 public class ReceitaDAO extends DAO<Receita> {
 
-    private static final String CREATE = "INSERT INTO receita (codigo, nome_medico, data_emissao, data_entrada, pedido_id) VALUES (?, ?, ?, ?, ?)";
-    private static final String READ = "SELECT * FROM receita";
-    private static final String UPDATE = "UPDATE receita SET codigo=?, nome_medico=?, data_emissao=?, data_entrada=?, pedido_id=? WHERE receita_id=?";
-    private static final String DELETE = "DELETE FROM receita WHERE receita_id=?";
-
-    public ReceitaDAO() {
+    public ReceitaDAO(String CREATE, String READ, String UPDATE, String DELETE) {
         super(CREATE, READ, UPDATE, DELETE);
     }
 

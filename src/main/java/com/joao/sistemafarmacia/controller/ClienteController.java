@@ -1,6 +1,7 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.ClienteDAO;
+import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Cliente;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class ClienteController {
     private final ClienteDAO clienteDAO;
 
     public ClienteController() {
-        this.clienteDAO = new ClienteDAO();
+        this.clienteDAO = (ClienteDAO) DAOFactory.criar("cliente");
     }
 
     public Cliente salvar(Cliente cliente) {
