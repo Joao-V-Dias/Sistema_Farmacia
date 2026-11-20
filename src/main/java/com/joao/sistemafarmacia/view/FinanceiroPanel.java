@@ -3,20 +3,26 @@ package com.joao.sistemafarmacia.view;
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Solicitacao;
 import com.joao.sistemafarmacia.controller.FinanceiroController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.controller.Subject;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class FinanceiroPanel extends javax.swing.JPanel {
+public class FinanceiroPanel extends javax.swing.JPanel implements Observer {
 
     private final FinanceiroController financeiroController;
     private List<Solicitacao> solicitacoes;
 
     public FinanceiroPanel() {
         initComponents();
-        this.financeiroController = new FinanceiroController();
+        this.financeiroController = (FinanceiroController) ControllerFactory.criar("financeiro");
         this.solicitacoes = new ArrayList<>();
+        ((Subject) ControllerFactory.criar("insumo")).adicionarObservador(this);
+        ((Subject) ControllerFactory.criar("solicitacao")).adicionarObservador(this);
+        ((Subject) ControllerFactory.criar("compra")).adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -142,6 +148,11 @@ public class FinanceiroPanel extends javax.swing.JPanel {
     private void btnRegistrarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarCompraActionPerformed
         registrarCompra();
     }//GEN-LAST:event_btnRegistrarCompraActionPerformed
+
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
 
     public void carregarTodos() {
         try {

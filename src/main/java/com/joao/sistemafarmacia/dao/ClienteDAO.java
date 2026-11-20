@@ -9,7 +9,12 @@ import java.util.List;
 
 public class ClienteDAO extends DAO<Cliente> {
 
-    public ClienteDAO(String CREATE, String READ, String UPDATE, String DELETE) {
+    private static final String CREATE = "INSERT INTO cliente (nome, telefone, rua, numero, cpf, data_nascimento) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String READ = "SELECT * FROM cliente";
+    private static final String UPDATE = "UPDATE cliente SET nome=?, telefone=?, rua=?, numero=?, cpf=?, data_nascimento=? WHERE cliente_id=?";
+    private static final String DELETE = "DELETE FROM cliente WHERE cliente_id=?";
+
+    public ClienteDAO() {
         super(CREATE, READ, UPDATE, DELETE);
     }
 

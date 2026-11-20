@@ -5,7 +5,7 @@ import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Solicitacao;
 import java.util.List;
 
-public class FinanceiroController {
+public class FinanceiroController implements Controller {
 
     private final FinanceiroDAO financeiroDAO;
     private final SolicitacaoController solicitacaoController;
@@ -13,8 +13,8 @@ public class FinanceiroController {
 
     public FinanceiroController() {
         this.financeiroDAO = new FinanceiroDAO();
-        this.solicitacaoController = new SolicitacaoController();
-        this.compraController = new CompraController();
+        this.solicitacaoController = (SolicitacaoController) ControllerFactory.criar("solicitacao");
+        this.compraController = (CompraController) ControllerFactory.criar("compra");
     }
 
     public double buscarValorEstoque() {

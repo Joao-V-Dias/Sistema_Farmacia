@@ -1,20 +1,23 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.PedidoDAO;
-import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PedidoController {
+public class PedidoController implements Controller, Subject {
 
     private final PedidoDAO pedidoDAO;
     private final ReceitaController receitaController;
+    private final List<Observer> observadores;
 
     public PedidoController() {
-        this.pedidoDAO = (PedidoDAO) DAOFactory.criar("pedido");
-        this.receitaController = new ReceitaController();
+        this.pedidoDAO = new PedidoDAO();
+        this.receitaController = (ReceitaController) ControllerFactory.criar("receita");
+        this.observadores = new ArrayList<>();
     }
 
     public Pedido salvar(Pedido pedido) {
@@ -35,15 +38,19 @@ public class PedidoController {
             receita.setPedido(pedido);
             receitaController.salvar(receita);
         }
+        notificarObservadores();
         return pedido;
     }
 
     public Pedido editar(Pedido pedido) {
-        return pedidoDAO.editar(pedido);
+        pedido = pedidoDAO.editar(pedido);
+        notificarObservadores();
+        return pedido;
     }
 
     public void deletar(Long id) {
         pedidoDAO.deletar(id);
+        notificarObservadores();
     }
 
     public List<Pedido> buscarPedidos() {
@@ -64,5 +71,17 @@ public class PedidoController {
             total += receitaController.calcularValor(receita);
         }
         return total;
+    }
+
+    @Override
+    public void adicionarObservador(Observer observer) {
+        observadores.add(observer);
+    }
+
+    @Override
+    public void notificarObservadores() {
+        for (Observer observer : observadores) {
+            observer.atualizar();
+        }
     }
 }

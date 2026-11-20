@@ -2,6 +2,7 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Cliente;
 import com.joao.sistemafarmacia.controller.ClienteController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -13,12 +14,12 @@ public class ClienteView extends javax.swing.JFrame {
 
     public ClienteView() {
         initComponents();
-        this.clienteController = new ClienteController();
+        this.clienteController = (ClienteController) ControllerFactory.criar("cliente");
     }
 
     public ClienteView(Cliente cliente) {
         initComponents();
-        this.clienteController = new ClienteController();
+        this.clienteController = (ClienteController) ControllerFactory.criar("cliente");
         mapearCampos(cliente);
         btnEditar.setEnabled(true);
         btnExcluir.setEnabled(true);

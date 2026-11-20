@@ -3,6 +3,7 @@ package com.joao.sistemafarmacia.view;
 import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Receita;
 import com.joao.sistemafarmacia.controller.ReceitaController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -15,7 +16,7 @@ public class PedidoReceitasView extends javax.swing.JFrame {
 
     public PedidoReceitasView(Long pedidoId) {
         initComponents();
-        this.receitaController = new ReceitaController();
+        this.receitaController = (ReceitaController) ControllerFactory.criar("receita");
         this.receitas = new ArrayList<>();
         txtTitulo.setText("RECEITAS DO PEDIDO " + pedidoId);
         carregarReceitas(pedidoId);

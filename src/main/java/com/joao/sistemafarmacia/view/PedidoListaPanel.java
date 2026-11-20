@@ -2,20 +2,23 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.controller.PedidoController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class PedidoListaPanel extends javax.swing.JPanel {
+public class PedidoListaPanel extends javax.swing.JPanel implements Observer {
 
     private final PedidoController pedidoController;
     private List<Pedido> pedidos;
 
     public PedidoListaPanel() {
         initComponents();
-        this.pedidoController = new PedidoController();
+        this.pedidoController = (PedidoController) ControllerFactory.criar("pedido");
         this.pedidos = new ArrayList<>();
+        pedidoController.adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -85,6 +88,11 @@ public class PedidoListaPanel extends javax.swing.JPanel {
             abrirPedido(tabPedido.rowAtPoint(evt.getPoint()));
         }
     }//GEN-LAST:event_tabPedidoMousePressed
+
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
 
     public void carregarTodos() {
         try {

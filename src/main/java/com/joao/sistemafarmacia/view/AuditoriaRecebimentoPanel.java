@@ -2,20 +2,24 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.controller.AuditoriaController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.controller.Subject;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
+public class AuditoriaRecebimentoPanel extends javax.swing.JPanel implements Observer {
 
     private final AuditoriaController auditoriaController;
     private List<Compra> compras;
 
     public AuditoriaRecebimentoPanel() {
         initComponents();
-        this.auditoriaController = new AuditoriaController();
+        this.auditoriaController = (AuditoriaController) ControllerFactory.criar("auditoria");
         this.compras = new ArrayList<>();
+        ((Subject) ControllerFactory.criar("compra")).adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -88,6 +92,11 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
         confirmarRecebimento();
     }//GEN-LAST:event_btnRecebidoActionPerformed
 
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
+
     public void carregarTodos() {
         try {
             compras = auditoriaController.buscarCompras();
@@ -105,7 +114,6 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
         try {
             auditoriaController.confirmarRecebimento(compra);
             mensagem("Compra " + compra.getId() + " recebida, estoque atualizado");
-            carregarTodos();
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }
@@ -119,7 +127,6 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel {
         try {
             auditoriaController.marcarDivergente(compra);
             mensagem("Compra " + compra.getId() + " marcada como divergente");
-            carregarTodos();
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }

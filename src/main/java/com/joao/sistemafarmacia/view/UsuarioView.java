@@ -2,6 +2,7 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Usuario;
 import com.joao.sistemafarmacia.controller.UsuarioController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,12 +16,12 @@ public class UsuarioView extends javax.swing.JFrame {
 
     public UsuarioView() {
         initComponents();
-        this.usuarioController = new UsuarioController();
+        this.usuarioController = (UsuarioController) ControllerFactory.criar("usuario");
     }
 
     public UsuarioView(Usuario usuario) {
         initComponents();
-        this.usuarioController = new UsuarioController();
+        this.usuarioController = (UsuarioController) ControllerFactory.criar("usuario");
         mapearCampos(usuario);
         txtEmail.setEnabled(false);
         btnEditar.setEnabled(true);

@@ -2,6 +2,7 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.controller.InsumoController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
 import javax.swing.JOptionPane;
 
 public class InsumoView extends javax.swing.JFrame {
@@ -10,12 +11,12 @@ public class InsumoView extends javax.swing.JFrame {
 
     public InsumoView() {
         initComponents();
-        this.insumoController = new InsumoController();
+        this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
     }
 
     public InsumoView(Insumo insumo) {
         initComponents();
-        this.insumoController = new InsumoController();
+        this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
         mapearCampos(insumo);
         btnEditar.setEnabled(true);
         btnExcluir.setEnabled(true);

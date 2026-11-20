@@ -4,12 +4,14 @@ import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.model.Solicitacao;
 import com.joao.sistemafarmacia.controller.InsumoController;
 import com.joao.sistemafarmacia.controller.SolicitacaoController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class EstoqueMinimoPanel extends javax.swing.JPanel {
+public class EstoqueMinimoPanel extends javax.swing.JPanel implements Observer {
 
     private final InsumoController insumoController;
     private final SolicitacaoController solicitacaoController;
@@ -17,9 +19,10 @@ public class EstoqueMinimoPanel extends javax.swing.JPanel {
 
     public EstoqueMinimoPanel() {
         initComponents();
-        this.insumoController = new InsumoController();
-        this.solicitacaoController = new SolicitacaoController();
+        this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
+        this.solicitacaoController = (SolicitacaoController) ControllerFactory.criar("solicitacao");
         this.insumos = new ArrayList<>();
+        insumoController.adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -79,6 +82,11 @@ public class EstoqueMinimoPanel extends javax.swing.JPanel {
     private void btnSolicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolicitarActionPerformed
         criarSolicitacao();
     }//GEN-LAST:event_btnSolicitarActionPerformed
+
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
 
     public void carregarTodos() {
         try {

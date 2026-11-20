@@ -2,6 +2,7 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Usuario;
 import com.joao.sistemafarmacia.controller.UsuarioController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
 import java.security.NoSuchAlgorithmException;
 import javax.mail.internet.AddressException;
 import javax.swing.JOptionPane;
@@ -12,7 +13,7 @@ public class LoginView extends javax.swing.JFrame {
 
     public LoginView() {
         initComponents();
-        this.usuarioController = new UsuarioController();
+        this.usuarioController = (UsuarioController) ControllerFactory.criar("usuario");
     }
 
     @SuppressWarnings("unchecked")

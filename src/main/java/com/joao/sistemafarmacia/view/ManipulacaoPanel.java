@@ -4,20 +4,24 @@ import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
 import com.joao.sistemafarmacia.controller.ManipulacaoController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.controller.Subject;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class ManipulacaoPanel extends javax.swing.JPanel {
+public class ManipulacaoPanel extends javax.swing.JPanel implements Observer {
 
     private final ManipulacaoController manipulacaoController;
     private List<Pedido> pedidos;
 
     public ManipulacaoPanel() {
         initComponents();
-        this.manipulacaoController = new ManipulacaoController();
+        this.manipulacaoController = (ManipulacaoController) ControllerFactory.criar("manipulacao");
         this.pedidos = new ArrayList<>();
+        ((Subject) ControllerFactory.criar("pedido")).adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -116,6 +120,11 @@ public class ManipulacaoPanel extends javax.swing.JPanel {
         marcarManipulado();
     }//GEN-LAST:event_btnManipuladoActionPerformed
 
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
+
     public void carregarTodos() {
         try {
             pedidos = manipulacaoController.buscarPedidos();
@@ -143,7 +152,6 @@ public class ManipulacaoPanel extends javax.swing.JPanel {
             try {
                 manipulacaoController.manipular(pedido);
                 mensagem("Pedido " + pedido.getId() + " manipulado, estoque atualizado");
-                carregarTodos();
             } catch (RuntimeException ex) {
                 mensagem(ex.getMessage());
             }

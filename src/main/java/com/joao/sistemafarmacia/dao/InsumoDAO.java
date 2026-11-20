@@ -8,7 +8,12 @@ import java.util.List;
 
 public class InsumoDAO extends DAO<Insumo> {
 
-    public InsumoDAO(String CREATE, String READ, String UPDATE, String DELETE) {
+    private static final String CREATE = "INSERT INTO insumo (nome, valor, quantidade, minimo) VALUES (?, ?, ?, ?)";
+    private static final String READ = "SELECT * FROM insumo";
+    private static final String UPDATE = "UPDATE insumo SET nome=?, valor=?, quantidade=?, minimo=? WHERE insumo_id=?";
+    private static final String DELETE = "DELETE FROM insumo WHERE insumo_id=?";
+
+    public InsumoDAO() {
         super(CREATE, READ, UPDATE, DELETE);
     }
 

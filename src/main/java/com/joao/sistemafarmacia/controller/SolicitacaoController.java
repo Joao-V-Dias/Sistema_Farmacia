@@ -1,17 +1,20 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.SolicitacaoDAO;
-import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Solicitacao;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public class SolicitacaoController {
+public class SolicitacaoController implements Controller, Subject {
 
     private final SolicitacaoDAO solicitacaoDAO;
+    private final List<Observer> observadores;
 
     public SolicitacaoController() {
-        this.solicitacaoDAO = (SolicitacaoDAO) DAOFactory.criar("solicitacao");
+        this.solicitacaoDAO = new SolicitacaoDAO();
+        this.observadores = new ArrayList<>();
     }
 
     public Solicitacao salvar(Solicitacao solicitacao) {
@@ -21,14 +24,30 @@ public class SolicitacaoController {
         solicitacao.setValor(solicitacao.getInsumo().getValor() * solicitacao.getQuantidade());
         solicitacao.setDataSolicitacao(LocalDate.now());
         solicitacao.setStatus("PENDENTE");
-        return solicitacaoDAO.salvar(solicitacao);
+        solicitacao = solicitacaoDAO.salvar(solicitacao);
+        notificarObservadores();
+        return solicitacao;
     }
 
     public Solicitacao editar(Solicitacao solicitacao) {
-        return solicitacaoDAO.editar(solicitacao);
+        solicitacao = solicitacaoDAO.editar(solicitacao);
+        notificarObservadores();
+        return solicitacao;
     }
 
     public List<Solicitacao> buscarSolicitacoes() {
         return solicitacaoDAO.buscarTodos();
+    }
+
+    @Override
+    public void adicionarObservador(Observer observer) {
+        observadores.add(observer);
+    }
+
+    @Override
+    public void notificarObservadores() {
+        for (Observer observer : observadores) {
+            observer.atualizar();
+        }
     }
 }

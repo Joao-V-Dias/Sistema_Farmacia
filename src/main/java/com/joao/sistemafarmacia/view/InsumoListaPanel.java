@@ -2,20 +2,23 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.controller.InsumoController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class InsumoListaPanel extends javax.swing.JPanel {
+public class InsumoListaPanel extends javax.swing.JPanel implements Observer {
 
     private final InsumoController insumoController;
     private List<Insumo> insumos;
 
     public InsumoListaPanel() {
         initComponents();
-        this.insumoController = new InsumoController();
+        this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
         this.insumos = new ArrayList<>();
+        insumoController.adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -88,6 +91,11 @@ public class InsumoListaPanel extends javax.swing.JPanel {
             abrirInsumo(tabInsumo.rowAtPoint(evt.getPoint()));
         }
     }//GEN-LAST:event_tabInsumoMousePressed
+
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
 
     public void carregarTodos() {
         try {

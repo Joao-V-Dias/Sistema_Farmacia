@@ -1,28 +1,36 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.ClienteDAO;
-import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Cliente;
+import com.joao.sistemafarmacia.view.observer.Observer;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteController {
+public class ClienteController implements Controller, Subject {
 
     private final ClienteDAO clienteDAO;
+    private final List<Observer> observadores;
 
     public ClienteController() {
-        this.clienteDAO = (ClienteDAO) DAOFactory.criar("cliente");
+        this.clienteDAO = new ClienteDAO();
+        this.observadores = new ArrayList<>();
     }
 
     public Cliente salvar(Cliente cliente) {
-        return clienteDAO.salvar(cliente);
+        cliente = clienteDAO.salvar(cliente);
+        notificarObservadores();
+        return cliente;
     }
 
     public Cliente editar(Cliente cliente) {
-        return clienteDAO.editar(cliente);
+        cliente = clienteDAO.editar(cliente);
+        notificarObservadores();
+        return cliente;
     }
 
     public void deletar(Long id) {
         clienteDAO.deletar(id);
+        notificarObservadores();
     }
 
     public List<Cliente> buscarClientes() {
@@ -31,5 +39,17 @@ public class ClienteController {
 
     public List<Cliente> buscarClientes(String cpf) {
         return clienteDAO.buscarPorCpf(cpf);
+    }
+
+    @Override
+    public void adicionarObservador(Observer observer) {
+        observadores.add(observer);
+    }
+
+    @Override
+    public void notificarObservadores() {
+        for (Observer observer : observadores) {
+            observer.atualizar();
+        }
     }
 }

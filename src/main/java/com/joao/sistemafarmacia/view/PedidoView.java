@@ -9,6 +9,7 @@ import com.joao.sistemafarmacia.controller.ClienteController;
 import com.joao.sistemafarmacia.controller.InsumoController;
 import com.joao.sistemafarmacia.controller.PedidoController;
 import com.joao.sistemafarmacia.controller.ReceitaController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -30,10 +31,10 @@ public class PedidoView extends javax.swing.JFrame {
 
     public PedidoView() {
         initComponents();
-        this.pedidoController = new PedidoController();
-        this.receitaController = new ReceitaController();
-        this.clienteController = new ClienteController();
-        this.insumoController = new InsumoController();
+        this.pedidoController = (PedidoController) ControllerFactory.criar("pedido");
+        this.receitaController = (ReceitaController) ControllerFactory.criar("receita");
+        this.clienteController = (ClienteController) ControllerFactory.criar("cliente");
+        this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
         this.clientes = new ArrayList<>();
         this.receitas = new ArrayList<>();
         carregarInsumos();

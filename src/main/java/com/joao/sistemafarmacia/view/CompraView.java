@@ -3,6 +3,7 @@ package com.joao.sistemafarmacia.view;
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Solicitacao;
 import com.joao.sistemafarmacia.controller.CompraController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
 import javax.swing.JOptionPane;
 
 public class CompraView extends javax.swing.JFrame {
@@ -12,7 +13,7 @@ public class CompraView extends javax.swing.JFrame {
 
     public CompraView(Solicitacao solicitacao) {
         initComponents();
-        this.compraController = new CompraController();
+        this.compraController = (CompraController) ControllerFactory.criar("compra");
         this.solicitacao = solicitacao;
         mapearCampos(solicitacao);
     }

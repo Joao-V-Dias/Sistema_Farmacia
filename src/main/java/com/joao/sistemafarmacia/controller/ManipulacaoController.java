@@ -5,16 +5,16 @@ import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
 import java.util.List;
 
-public class ManipulacaoController {
+public class ManipulacaoController implements Controller {
 
     private final PedidoController pedidoController;
     private final ReceitaController receitaController;
     private final InsumoController insumoController;
 
     public ManipulacaoController() {
-        this.pedidoController = new PedidoController();
-        this.receitaController = new ReceitaController();
-        this.insumoController = new InsumoController();
+        this.pedidoController = (PedidoController) ControllerFactory.criar("pedido");
+        this.receitaController = (ReceitaController) ControllerFactory.criar("receita");
+        this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
     }
 
     public List<Pedido> buscarPedidos() {

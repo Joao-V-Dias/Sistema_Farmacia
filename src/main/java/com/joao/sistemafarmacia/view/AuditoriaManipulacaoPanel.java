@@ -4,20 +4,24 @@ import com.joao.sistemafarmacia.model.ItensReceita;
 import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.model.Receita;
 import com.joao.sistemafarmacia.controller.AuditoriaController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.controller.Subject;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
+public class AuditoriaManipulacaoPanel extends javax.swing.JPanel implements Observer {
 
     private final AuditoriaController auditoriaController;
     private List<Pedido> pedidos;
 
     public AuditoriaManipulacaoPanel() {
         initComponents();
-        this.auditoriaController = new AuditoriaController();
+        this.auditoriaController = (AuditoriaController) ControllerFactory.criar("auditoria");
         this.pedidos = new ArrayList<>();
+        ((Subject) ControllerFactory.criar("pedido")).adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -127,6 +131,11 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
         liberarEntrega();
     }//GEN-LAST:event_btnLiberarActionPerformed
 
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
+
     public void carregarTodos() {
         try {
             pedidos = auditoriaController.buscarPedidosManipulados();
@@ -153,7 +162,6 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
         try {
             auditoriaController.liberarEntrega(pedido);
             mensagem("Pedido " + pedido.getId() + " liberado para entrega");
-            carregarTodos();
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }
@@ -167,7 +175,6 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel {
         try {
             auditoriaController.reprovarManipulacao(pedido);
             mensagem("Pedido " + pedido.getId() + " reprovado");
-            carregarTodos();
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }

@@ -1,21 +1,24 @@
 package com.joao.sistemafarmacia.controller;
 
 import com.joao.sistemafarmacia.dao.CompraDAO;
-import com.joao.sistemafarmacia.dao.DAOFactory;
 import com.joao.sistemafarmacia.model.Compra;
 import com.joao.sistemafarmacia.model.Insumo;
+import com.joao.sistemafarmacia.view.observer.Observer;
+import java.util.ArrayList;
 import java.util.List;
 
-public class CompraController {
+public class CompraController implements Controller, Subject {
 
     private final CompraDAO compraDAO;
     private final SolicitacaoController solicitacaoController;
     private final InsumoController insumoController;
+    private final List<Observer> observadores;
 
     public CompraController() {
-        this.compraDAO = (CompraDAO) DAOFactory.criar("compra");
-        this.solicitacaoController = new SolicitacaoController();
-        this.insumoController = new InsumoController();
+        this.compraDAO = new CompraDAO();
+        this.solicitacaoController = (SolicitacaoController) ControllerFactory.criar("solicitacao");
+        this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
+        this.observadores = new ArrayList<>();
     }
 
     public Compra salvar(Compra compra) {
@@ -31,6 +34,7 @@ public class CompraController {
 
         compra.getSolicitacao().setStatus("COMPRADA");
         solicitacaoController.editar(compra.getSolicitacao());
+        notificarObservadores();
         return compra;
     }
 
@@ -47,7 +51,9 @@ public class CompraController {
         insumoController.editar(insumo);
 
         compra.setStatus("RECEBIDA");
-        return compraDAO.editar(compra);
+        compra = compraDAO.editar(compra);
+        notificarObservadores();
+        return compra;
     }
 
     public Compra marcarDivergente(Compra compra) {
@@ -55,6 +61,20 @@ public class CompraController {
             throw new IllegalArgumentException("Esta compra já foi auditada");
         }
         compra.setStatus("DIVERGENTE");
-        return compraDAO.editar(compra);
+        compra = compraDAO.editar(compra);
+        notificarObservadores();
+        return compra;
+    }
+
+    @Override
+    public void adicionarObservador(Observer observer) {
+        observadores.add(observer);
+    }
+
+    @Override
+    public void notificarObservadores() {
+        for (Observer observer : observadores) {
+            observer.atualizar();
+        }
     }
 }

@@ -2,20 +2,23 @@ package com.joao.sistemafarmacia.view;
 
 import com.joao.sistemafarmacia.model.Usuario;
 import com.joao.sistemafarmacia.controller.UsuarioController;
+import com.joao.sistemafarmacia.controller.ControllerFactory;
+import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class UsuarioListaPanel extends javax.swing.JPanel {
+public class UsuarioListaPanel extends javax.swing.JPanel implements Observer {
 
     private final UsuarioController usuarioController;
     private List<Usuario> usuarios;
 
     public UsuarioListaPanel() {
         initComponents();
-        this.usuarioController = new UsuarioController();
+        this.usuarioController = (UsuarioController) ControllerFactory.criar("usuario");
         this.usuarios = new ArrayList<>();
+        usuarioController.adicionarObservador(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -88,6 +91,11 @@ public class UsuarioListaPanel extends javax.swing.JPanel {
             abrirUsuario(tabUsuario.rowAtPoint(evt.getPoint()));
         }
     }//GEN-LAST:event_tabUsuarioMousePressed
+
+    @Override
+    public void atualizar() {
+        carregarTodos();
+    }
 
     public void carregarTodos() {
         try {
