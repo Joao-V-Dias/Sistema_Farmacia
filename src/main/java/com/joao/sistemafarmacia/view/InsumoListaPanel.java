@@ -4,20 +4,16 @@ import com.joao.sistemafarmacia.model.Insumo;
 import com.joao.sistemafarmacia.controller.InsumoController;
 import com.joao.sistemafarmacia.controller.ControllerFactory;
 import com.joao.sistemafarmacia.view.observer.Observer;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class InsumoListaPanel extends javax.swing.JPanel implements Observer {
+public class InsumoListaPanel extends ListaPanel<Insumo> implements Observer {
 
     private final InsumoController insumoController;
-    private List<Insumo> insumos;
 
     public InsumoListaPanel() {
         initComponents();
         this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
-        this.insumos = new ArrayList<>();
         insumoController.adicionarObservador(this);
     }
 
@@ -94,22 +90,18 @@ public class InsumoListaPanel extends javax.swing.JPanel implements Observer {
 
     @Override
     public void atualizar() {
-        carregarTodos();
+        carregarTabela();
     }
 
-    public void carregarTodos() {
-        try {
-            insumos = insumoController.buscarInsumos();
-            preencherTabela(insumos);
-        } catch (RuntimeException ex) {
-            mensagem(ex.getMessage());
-        }
+    @Override
+    protected List<Insumo> buscarItens() {
+        return insumoController.buscarInsumos();
     }
 
     private void buscarInsumos() {
         try {
-            insumos = insumoController.buscarInsumos(txtInsumo.getText());
-            preencherTabela(insumos);
+            itens = insumoController.buscarInsumos(txtInsumo.getText());
+            preencherTabela(itens);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }
@@ -117,21 +109,18 @@ public class InsumoListaPanel extends javax.swing.JPanel implements Observer {
 
     private void abrirInsumo(int linha) {
         if (linha >= 0) {
-            new InsumoView(insumos.get(tabInsumo.convertRowIndexToModel(linha))).setVisible(true);
+            new InsumoView(buscarItem(tabInsumo, linha)).setVisible(true);
         }
     }
 
-    private void preencherTabela(List<Insumo> insumos) {
+    @Override
+    protected void preencherTabela(List<Insumo> insumos) {
         DefaultTableModel tabelaInsumos = (DefaultTableModel) tabInsumo.getModel();
         tabelaInsumos.setNumRows(0);
 
         insumos.forEach(insumo -> tabelaInsumos.addRow(new Object[]{
             insumo.getId(), insumo.getNome(), insumo.getValor(), insumo.getQuantidade(), insumo.getMinimo()
         }));
-    }
-
-    private void mensagem(String mensagem) {
-        JOptionPane.showMessageDialog(this, mensagem);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

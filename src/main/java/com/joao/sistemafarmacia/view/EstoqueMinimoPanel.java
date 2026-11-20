@@ -6,22 +6,19 @@ import com.joao.sistemafarmacia.controller.InsumoController;
 import com.joao.sistemafarmacia.controller.SolicitacaoController;
 import com.joao.sistemafarmacia.controller.ControllerFactory;
 import com.joao.sistemafarmacia.view.observer.Observer;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class EstoqueMinimoPanel extends javax.swing.JPanel implements Observer {
+public class EstoqueMinimoPanel extends ListaPanel<Insumo> implements Observer {
 
     private final InsumoController insumoController;
     private final SolicitacaoController solicitacaoController;
-    private List<Insumo> insumos;
 
     public EstoqueMinimoPanel() {
         initComponents();
         this.insumoController = (InsumoController) ControllerFactory.criar("insumo");
         this.solicitacaoController = (SolicitacaoController) ControllerFactory.criar("solicitacao");
-        this.insumos = new ArrayList<>();
         insumoController.adicionarObservador(this);
     }
 
@@ -85,16 +82,12 @@ public class EstoqueMinimoPanel extends javax.swing.JPanel implements Observer {
 
     @Override
     public void atualizar() {
-        carregarTodos();
+        carregarTabela();
     }
 
-    public void carregarTodos() {
-        try {
-            insumos = insumoController.buscarInsumosEstoqueMinimo();
-            preencherTabela(insumos);
-        } catch (RuntimeException ex) {
-            mensagem(ex.getMessage());
-        }
+    @Override
+    protected List<Insumo> buscarItens() {
+        return insumoController.buscarInsumosEstoqueMinimo();
     }
 
     private void criarSolicitacao() {
@@ -117,12 +110,7 @@ public class EstoqueMinimoPanel extends javax.swing.JPanel implements Observer {
     }
 
     private Insumo buscarInsumoSelecionado() {
-        int linha = tabInsumo.getSelectedRow();
-        if (linha < 0) {
-            mensagem("Selecione um insumo na tabela");
-            return null;
-        }
-        return insumos.get(tabInsumo.convertRowIndexToModel(linha));
+        return buscarSelecionado(tabInsumo, "Selecione um insumo na tabela");
     }
 
     private Solicitacao mapearSolicitacao(Insumo insumo, String quantidade) {
@@ -132,17 +120,14 @@ public class EstoqueMinimoPanel extends javax.swing.JPanel implements Observer {
         return solicitacao;
     }
 
-    private void preencherTabela(List<Insumo> insumos) {
+    @Override
+    protected void preencherTabela(List<Insumo> insumos) {
         DefaultTableModel tabelaInsumos = (DefaultTableModel) tabInsumo.getModel();
         tabelaInsumos.setNumRows(0);
 
         insumos.forEach(insumo -> tabelaInsumos.addRow(new Object[]{
             insumo.getId(), insumo.getNome(), insumo.getValor(), insumo.getQuantidade(), insumo.getMinimo()
         }));
-    }
-
-    private void mensagem(String mensagem) {
-        JOptionPane.showMessageDialog(this, mensagem);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

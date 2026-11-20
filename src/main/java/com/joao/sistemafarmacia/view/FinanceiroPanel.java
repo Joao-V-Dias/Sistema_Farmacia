@@ -151,10 +151,10 @@ public class FinanceiroPanel extends javax.swing.JPanel implements Observer {
 
     @Override
     public void atualizar() {
-        carregarTodos();
+        carregarTabela();
     }
 
-    public void carregarTodos() {
+    public void carregarTabela() {
         try {
             txtValorEstoque.setText(String.valueOf(financeiroController.buscarValorEstoque()));
 

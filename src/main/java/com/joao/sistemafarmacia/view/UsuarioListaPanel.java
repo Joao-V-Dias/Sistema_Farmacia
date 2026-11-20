@@ -4,20 +4,16 @@ import com.joao.sistemafarmacia.model.Usuario;
 import com.joao.sistemafarmacia.controller.UsuarioController;
 import com.joao.sistemafarmacia.controller.ControllerFactory;
 import com.joao.sistemafarmacia.view.observer.Observer;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class UsuarioListaPanel extends javax.swing.JPanel implements Observer {
+public class UsuarioListaPanel extends ListaPanel<Usuario> implements Observer {
 
     private final UsuarioController usuarioController;
-    private List<Usuario> usuarios;
 
     public UsuarioListaPanel() {
         initComponents();
         this.usuarioController = (UsuarioController) ControllerFactory.criar("usuario");
-        this.usuarios = new ArrayList<>();
         usuarioController.adicionarObservador(this);
     }
 
@@ -94,22 +90,18 @@ public class UsuarioListaPanel extends javax.swing.JPanel implements Observer {
 
     @Override
     public void atualizar() {
-        carregarTodos();
+        carregarTabela();
     }
 
-    public void carregarTodos() {
-        try {
-            usuarios = usuarioController.buscarUsuarios();
-            preencherTabela(usuarios);
-        } catch (RuntimeException ex) {
-            mensagem(ex.getMessage());
-        }
+    @Override
+    protected List<Usuario> buscarItens() {
+        return usuarioController.buscarUsuarios();
     }
 
     private void buscarUsuarios() {
         try {
-            usuarios = usuarioController.buscarUsuarios(txtUsuario.getText());
-            preencherTabela(usuarios);
+            itens = usuarioController.buscarUsuarios(txtUsuario.getText());
+            preencherTabela(itens);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }
@@ -117,11 +109,12 @@ public class UsuarioListaPanel extends javax.swing.JPanel implements Observer {
 
     private void abrirUsuario(int linha) {
         if (linha >= 0) {
-            new UsuarioView(usuarios.get(tabUsuario.convertRowIndexToModel(linha))).setVisible(true);
+            new UsuarioView(buscarItem(tabUsuario, linha)).setVisible(true);
         }
     }
 
-    private void preencherTabela(List<Usuario> usuarios) {
+    @Override
+    protected void preencherTabela(List<Usuario> usuarios) {
         DefaultTableModel tabelaUsuarios = (DefaultTableModel) tabUsuario.getModel();
         tabelaUsuarios.setNumRows(0);
 
@@ -129,10 +122,6 @@ public class UsuarioListaPanel extends javax.swing.JPanel implements Observer {
             usuario.getId(), usuario.getNome(), usuario.getCpf(), usuario.getTelefone(),
             usuario.getDataNascimento(), usuario.getEmail(), usuario.getCargo()
         }));
-    }
-
-    private void mensagem(String mensagem) {
-        JOptionPane.showMessageDialog(this, mensagem);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

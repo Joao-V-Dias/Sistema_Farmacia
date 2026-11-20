@@ -5,20 +5,16 @@ import com.joao.sistemafarmacia.controller.AuditoriaController;
 import com.joao.sistemafarmacia.controller.ControllerFactory;
 import com.joao.sistemafarmacia.controller.Subject;
 import com.joao.sistemafarmacia.view.observer.Observer;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class AuditoriaRecebimentoPanel extends javax.swing.JPanel implements Observer {
+public class AuditoriaRecebimentoPanel extends ListaPanel<Compra> implements Observer {
 
     private final AuditoriaController auditoriaController;
-    private List<Compra> compras;
 
     public AuditoriaRecebimentoPanel() {
         initComponents();
         this.auditoriaController = (AuditoriaController) ControllerFactory.criar("auditoria");
-        this.compras = new ArrayList<>();
         ((Subject) ControllerFactory.criar("compra")).adicionarObservador(this);
     }
 
@@ -94,16 +90,12 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel implements Obs
 
     @Override
     public void atualizar() {
-        carregarTodos();
+        carregarTabela();
     }
 
-    public void carregarTodos() {
-        try {
-            compras = auditoriaController.buscarCompras();
-            preencherTabela(compras);
-        } catch (RuntimeException ex) {
-            mensagem(ex.getMessage());
-        }
+    @Override
+    protected List<Compra> buscarItens() {
+        return auditoriaController.buscarCompras();
     }
 
     private void confirmarRecebimento() {
@@ -133,15 +125,11 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel implements Obs
     }
 
     private Compra buscarCompraSelecionada() {
-        int linha = tabCompra.getSelectedRow();
-        if (linha < 0) {
-            mensagem("Selecione uma compra na tabela");
-            return null;
-        }
-        return compras.get(tabCompra.convertRowIndexToModel(linha));
+        return buscarSelecionado(tabCompra, "Selecione uma compra na tabela");
     }
 
-    private void preencherTabela(List<Compra> compras) {
+    @Override
+    protected void preencherTabela(List<Compra> compras) {
         DefaultTableModel tabelaCompras = (DefaultTableModel) tabCompra.getModel();
         tabelaCompras.setNumRows(0);
 
@@ -149,10 +137,6 @@ public class AuditoriaRecebimentoPanel extends javax.swing.JPanel implements Obs
             compra.getId(), compra.getInsumo().getNome(), compra.getCnpjFornecedor(), compra.getNumeroNotaFiscal(),
             compra.getQuantidade(), compra.getValor(), compra.getStatus()
         }));
-    }
-
-    private void mensagem(String mensagem) {
-        JOptionPane.showMessageDialog(this, mensagem);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

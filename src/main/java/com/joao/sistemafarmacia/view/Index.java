@@ -8,7 +8,7 @@ public class Index extends javax.swing.JFrame {
         initComponents();
         setExtendedState(Index.MAXIMIZED_BOTH);
         mostrarTela("listarPedido");
-        pedidoListaPanel1.carregarTodos();
+        pedidoListaPanel1.carregarTabela();
     }
 
     @SuppressWarnings("unchecked")
@@ -161,12 +161,12 @@ public class Index extends javax.swing.JFrame {
 
     private void btnListarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarClienteActionPerformed
         mostrarTela("listarCliente");
-        clienteListaPanel1.carregarTodos();
+        clienteListaPanel1.carregarTabela();
     }//GEN-LAST:event_btnListarClienteActionPerformed
 
     private void btnBuscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuarioActionPerformed
         mostrarTela("listarUsuario");
-        usuarioListaPanel1.carregarTodos();
+        usuarioListaPanel1.carregarTabela();
     }//GEN-LAST:event_btnBuscarUsuarioActionPerformed
 
     private void AdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdicionarClienteActionPerformed
@@ -187,37 +187,37 @@ public class Index extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         mostrarTela("listarPedido");
-        pedidoListaPanel1.carregarTodos();
+        pedidoListaPanel1.carregarTabela();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void btnBuscarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarInsumoActionPerformed
         mostrarTela("listarInsumo");
-        insumoListaPanel1.carregarTodos();
+        insumoListaPanel1.carregarTabela();
     }//GEN-LAST:event_btnBuscarInsumoActionPerformed
 
     private void btnEstoqueMinimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstoqueMinimoActionPerformed
         mostrarTela("estoqueMinimo");
-        estoqueMinimoPanel1.carregarTodos();
+        estoqueMinimoPanel1.carregarTabela();
     }//GEN-LAST:event_btnEstoqueMinimoActionPerformed
 
     private void btnFinanceiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinanceiroActionPerformed
         mostrarTela("financeiro");
-        financeiroPanel1.carregarTodos();
+        financeiroPanel1.carregarTabela();
     }//GEN-LAST:event_btnFinanceiroActionPerformed
 
     private void btnAuditoriaRecebimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuditoriaRecebimentoActionPerformed
         mostrarTela("auditoriaRecebimento");
-        auditoriaRecebimentoPanel1.carregarTodos();
+        auditoriaRecebimentoPanel1.carregarTabela();
     }//GEN-LAST:event_btnAuditoriaRecebimentoActionPerformed
 
     private void btnManipulacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManipulacaoActionPerformed
         mostrarTela("manipulacao");
-        manipulacaoPanel1.carregarTodos();
+        manipulacaoPanel1.carregarTabela();
     }//GEN-LAST:event_btnManipulacaoActionPerformed
 
     private void btnAuditoriaManipulacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuditoriaManipulacaoActionPerformed
         mostrarTela("auditoriaManipulacao");
-        auditoriaManipulacaoPanel1.carregarTodos();
+        auditoriaManipulacaoPanel1.carregarTabela();
     }//GEN-LAST:event_btnAuditoriaManipulacaoActionPerformed
 
     private void mostrarTela(String tela) {

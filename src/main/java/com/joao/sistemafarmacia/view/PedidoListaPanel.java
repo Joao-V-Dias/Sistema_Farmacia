@@ -4,20 +4,16 @@ import com.joao.sistemafarmacia.model.Pedido;
 import com.joao.sistemafarmacia.controller.PedidoController;
 import com.joao.sistemafarmacia.controller.ControllerFactory;
 import com.joao.sistemafarmacia.view.observer.Observer;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class PedidoListaPanel extends javax.swing.JPanel implements Observer {
+public class PedidoListaPanel extends ListaPanel<Pedido> implements Observer {
 
     private final PedidoController pedidoController;
-    private List<Pedido> pedidos;
 
     public PedidoListaPanel() {
         initComponents();
         this.pedidoController = (PedidoController) ControllerFactory.criar("pedido");
-        this.pedidos = new ArrayList<>();
         pedidoController.adicionarObservador(this);
     }
 
@@ -91,22 +87,18 @@ public class PedidoListaPanel extends javax.swing.JPanel implements Observer {
 
     @Override
     public void atualizar() {
-        carregarTodos();
+        carregarTabela();
     }
 
-    public void carregarTodos() {
-        try {
-            pedidos = pedidoController.buscarPedidos();
-            preencherTabela(pedidos);
-        } catch (RuntimeException ex) {
-            mensagem(ex.getMessage());
-        }
+    @Override
+    protected List<Pedido> buscarItens() {
+        return pedidoController.buscarPedidos();
     }
 
     private void buscarPedidos() {
         try {
-            pedidos = pedidoController.buscarPedidosPorCpf(txtCpf.getText());
-            preencherTabela(pedidos);
+            itens = pedidoController.buscarPedidosPorCpf(txtCpf.getText());
+            preencherTabela(itens);
         } catch (RuntimeException ex) {
             mensagem(ex.getMessage());
         }
@@ -114,11 +106,12 @@ public class PedidoListaPanel extends javax.swing.JPanel implements Observer {
 
     private void abrirPedido(int linha) {
         if (linha >= 0) {
-            new PedidoReceitasView(pedidos.get(tabPedido.convertRowIndexToModel(linha)).getId()).setVisible(true);
+            new PedidoReceitasView(buscarItem(tabPedido, linha).getId()).setVisible(true);
         }
     }
 
-    private void preencherTabela(List<Pedido> pedidos) {
+    @Override
+    protected void preencherTabela(List<Pedido> pedidos) {
         DefaultTableModel tabelaPedidos = (DefaultTableModel) tabPedido.getModel();
         tabelaPedidos.setNumRows(0);
 
@@ -126,10 +119,6 @@ public class PedidoListaPanel extends javax.swing.JPanel implements Observer {
             pedido.getId(), pedido.getCliente().getNome(), pedido.getCliente().getCpf(),
             pedido.getDataPedido(), pedido.getValor(), pedido.getStatus()
         }));
-    }
-
-    private void mensagem(String mensagem) {
-        JOptionPane.showMessageDialog(this, mensagem);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

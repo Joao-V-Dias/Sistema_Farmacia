@@ -9,18 +9,15 @@ import com.joao.sistemafarmacia.controller.Subject;
 import com.joao.sistemafarmacia.view.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class AuditoriaManipulacaoPanel extends javax.swing.JPanel implements Observer {
+public class AuditoriaManipulacaoPanel extends ListaPanel<Pedido> implements Observer {
 
     private final AuditoriaController auditoriaController;
-    private List<Pedido> pedidos;
 
     public AuditoriaManipulacaoPanel() {
         initComponents();
         this.auditoriaController = (AuditoriaController) ControllerFactory.criar("auditoria");
-        this.pedidos = new ArrayList<>();
         ((Subject) ControllerFactory.criar("pedido")).adicionarObservador(this);
     }
 
@@ -119,7 +116,7 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel implements Obs
     private void tabPedidoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabPedidoMousePressed
         int linha = tabPedido.rowAtPoint(evt.getPoint());
         if (linha >= 0) {
-            carregarReceitas(pedidos.get(tabPedido.convertRowIndexToModel(linha)));
+            carregarReceitas(buscarItem(tabPedido, linha));
         }
     }//GEN-LAST:event_tabPedidoMousePressed
 
@@ -133,17 +130,12 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel implements Obs
 
     @Override
     public void atualizar() {
-        carregarTodos();
+        carregarTabela();
     }
 
-    public void carregarTodos() {
-        try {
-            pedidos = auditoriaController.buscarPedidosManipulados();
-            preencherTabelaPedidos(pedidos);
-            preencherTabelaReceitas(new ArrayList<>());
-        } catch (RuntimeException ex) {
-            mensagem(ex.getMessage());
-        }
+    @Override
+    protected List<Pedido> buscarItens() {
+        return auditoriaController.buscarPedidosManipulados();
     }
 
     private void carregarReceitas(Pedido pedido) {
@@ -181,15 +173,11 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel implements Obs
     }
 
     private Pedido buscarPedidoSelecionado() {
-        int linha = tabPedido.getSelectedRow();
-        if (linha < 0) {
-            mensagem("Selecione um pedido na tabela");
-            return null;
-        }
-        return pedidos.get(tabPedido.convertRowIndexToModel(linha));
+        return buscarSelecionado(tabPedido, "Selecione um pedido na tabela");
     }
 
-    private void preencherTabelaPedidos(List<Pedido> pedidos) {
+    @Override
+    protected void preencherTabela(List<Pedido> pedidos) {
         DefaultTableModel tabelaPedidos = (DefaultTableModel) tabPedido.getModel();
         tabelaPedidos.setNumRows(0);
 
@@ -197,6 +185,11 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel implements Obs
             pedido.getId(), pedido.getCliente().getNome(), pedido.getCliente().getCpf(),
             pedido.getDataPedido(), pedido.getValor(), pedido.getStatus()
         }));
+    }
+
+    @Override
+    protected void aposCarregar() {
+        preencherTabelaReceitas(new ArrayList<>());
     }
 
     private void preencherTabelaReceitas(List<Receita> receitas) {
@@ -211,10 +204,6 @@ public class AuditoriaManipulacaoPanel extends javax.swing.JPanel implements Obs
                 });
             }
         }
-    }
-
-    private void mensagem(String mensagem) {
-        JOptionPane.showMessageDialog(this, mensagem);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
